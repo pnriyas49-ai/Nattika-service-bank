@@ -1,13 +1,11 @@
-import { createReader } from '@keystatic/core/reader';
-import config from '../../../../keystatic.config';
+import { getCollection } from '@/lib/data-reader';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Camera, Calendar } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function PhotoGalleryPage() {
-  const reader = createReader(process.cwd(), config);
-  const photos = await reader.collections.photoGallery.all();
+  const photos = getCollection('photoGallery');
 
   return (
     <>

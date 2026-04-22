@@ -1,12 +1,10 @@
-import { createReader } from '@keystatic/core/reader';
-import config from '../../../keystatic.config';
+import { getCollection } from '@/lib/data-reader';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { PiggyBank, Briefcase, Calculator } from 'lucide-react';
 
 export default async function DepositsPage() {
-  const reader = createReader(process.cwd(), config);
-  const depositRates = await reader.collections.depositRates.all();
+  const depositRates = getCollection('depositRates');
 
   return (
     <>

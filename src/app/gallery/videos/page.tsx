@@ -1,13 +1,11 @@
-import { createReader } from '@keystatic/core/reader';
-import config from '../../../../keystatic.config';
+import { getCollection } from '@/lib/data-reader';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Film } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function VideoGalleryPage() {
-  const reader = createReader(process.cwd(), config);
-  const videos = await reader.collections.videoGallery.all();
+  const videos = getCollection('videoGallery');
 
   return (
     <>

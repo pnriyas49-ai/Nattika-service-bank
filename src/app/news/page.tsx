@@ -1,12 +1,10 @@
-import { createReader } from '@keystatic/core/reader';
-import config from '../../../keystatic.config';
+import { getCollection } from '@/lib/data-reader';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Newspaper, Calendar } from 'lucide-react';
 
 export default async function NewsPage() {
-  const reader = createReader(process.cwd(), config);
-  const newsItems = await reader.collections.news.all();
+  const newsItems = getCollection('news');
 
   return (
     <>
