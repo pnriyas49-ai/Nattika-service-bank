@@ -3,9 +3,8 @@ import Link from 'next/link';
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { name: 'Dashboard', href: '/admin' },
+    { name: 'Facilities', href: '/admin/facilities' },
     { name: 'News & Announcements', href: '/admin/news' },
-    { name: 'Loan Rates', href: '/admin/loans' },
-    { name: 'Deposit Rates', href: '/admin/deposits' },
     { name: 'Photo Gallery', href: '/admin/photos' },
     { name: 'Video Gallery', href: '/admin/videos' },
     { name: 'Homepage Settings', href: '/admin/homepage' },

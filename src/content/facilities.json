@@ -1,0 +1,60 @@
+{
+  "heroImage": "/images/about/heroImage.webp",
+  "sections": [
+    {
+      "title": "Loans",
+      "titleMl": "വായ്പകൾ",
+      "columns": ["Particulars", "Interest Rate", "Details"],
+      "rows": [
+        ["Gold Loan", "8.50%", "Quick cash against gold ornaments with maximum valuation"],
+        ["Agriculture Loan", "4.00%", "Lowest rate of interest for agriculture loans"],
+        ["Mortgage Loan", "11.00% to 12.00%", "Up to 50 Lakhs, Max 120 months"],
+        ["Personal Loan", "11.00%", "DLG - Amount Max 10,000/-"],
+        ["Other Loans", "11% to 12%", "Contact branch for details"]
+      ]
+    },
+    {
+      "title": "Deposits",
+      "titleMl": "നിക്ഷേപങ്ങൾ",
+      "columns": ["Maturity Period", "General Public (p.a)", "Senior Citizen (p.a)"],
+      "rows": [
+        ["15 Days to 45 Days", "6.00%", "6.50%"],
+        ["46 Days to 90 Days", "6.50%", "7.00%"],
+        ["91 Days to 179 Days", "7.50%", "8.00%"],
+        ["180 Days to less than 1 Year", "7.75%", "8.25%"],
+        ["1 Year to less than 2 Years", "9.00%", "9.50%"],
+        ["2 Years and Above", "8.75%", "9.25%"]
+      ]
+    },
+    {
+      "title": "Rates & Charges",
+      "titleMl": "നിരക്കുകളും ചാർജുകളും",
+      "columns": ["Particulars", "Percentage"],
+      "rows": [
+        ["Savings Bank", "4.00%"],
+        ["Fixed Deposit", "Upto 9.5%"],
+        ["Monthly Savings Scheme", "8.75% - 9.25%"]
+      ]
+    }
+  ],
+  "subsidiaries": [
+    {
+      "title": "Neethi Medical Store",
+      "titleMl": "നീതി മെഡിക്കൽ സ്റ്റോർ",
+      "description": "Affordable medicines for the community. Working on all days. Sunday: 8:30 AM - 1:00 PM. Ph: 9497023677",
+      "image": ""
+    },
+    {
+      "title": "Neethi Vastralaya",
+      "titleMl": "നീതി വസ്ത്രാലയ",
+      "description": "Quality clothing at cooperative prices for the community.",
+      "image": ""
+    },
+    {
+      "title": "Neethi Clinic & Lab",
+      "titleMl": "നീതി ക്ലിനിക് & ലാബ്",
+      "description": "Affordable healthcare services including clinic consultation and laboratory tests.",
+      "image": ""
+    }
+  ]
+}

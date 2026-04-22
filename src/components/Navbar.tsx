@@ -20,10 +20,10 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { href: '/loans', labelEn: 'Loans', labelMl: 'ലോണുകൾ' },
-    { href: '/deposits', labelEn: 'Deposits', labelMl: 'നിക്ഷേപങ്ങൾ' },
-    { href: '/services', labelEn: 'Services', labelMl: 'സേവനങ്ങൾ' },
+    { href: '/facilities', labelEn: 'Facilities', labelMl: 'സൗകര്യങ്ങൾ' },
     { href: '/news', labelEn: 'News & Notices', labelMl: 'വാർത്തകൾ' },
+    { href: '/about', labelEn: 'About Us', labelMl: 'ഞങ്ങളെ കുറിച്ച്' },
+    { href: '/gallery/photos', labelEn: 'Gallery', labelMl: 'ഗാലറി' },
     { href: '/contact', labelEn: 'Contact Us', labelMl: 'ബന്ധപ്പെടുക' },
   ];
 

@@ -84,8 +84,8 @@ export default function HomePageClient({
                transition={{ delay: 0.2 }}
                className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 justify-center"
             >
-              <Link href="/services" className="bg-[#047038] hover:bg-green-700 text-white px-8 py-4 rounded-full text-lg font-bold transition-all shadow-xl flex items-center justify-center">
-                {t('Our Services', 'സേവനങ്ങൾ')} <ChevronRight className="ml-2 w-5 h-5" />
+              <Link href="/facilities" className="bg-[#047038] hover:bg-green-700 text-white px-8 py-4 rounded-full text-lg font-bold transition-all shadow-xl flex items-center justify-center">
+                {t('Our Facilities', 'സൗകര്യങ്ങൾ')} <ChevronRight className="ml-2 w-5 h-5" />
               </Link>
               <Link href="/contact" className="bg-white hover:bg-gray-50 text-[#0A3D91] px-8 py-4 rounded-full text-lg font-bold transition-all shadow-xl flex items-center justify-center">
                 {t('Contact Us', 'ബന്ധപ്പെടുക')}
@@ -153,7 +153,7 @@ export default function HomePageClient({
                
                <ShieldCheck className="w-32 h-32 text-white/10 absolute -bottom-8 -right-8 group-hover:scale-110 transition-transform duration-700" />
                
-               <Link href="/services" className="mt-auto inline-flex items-center font-bold text-white group/btn">
+               <Link href="/facilities#subsidiaries" className="mt-auto inline-flex items-center font-bold text-white group/btn">
                  <span className="mr-2 border-b-2 border-green-400 group-hover/btn:border-white transition-colors">{t('Learn More', 'കൂടുതൽ അറിയാൻ')}</span>
                  <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                </Link>
@@ -215,7 +215,7 @@ export default function HomePageClient({
           <div className="mt-16">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-800">{t('Our Premium Services', 'ഞങ്ങളുടെ സേവനങ്ങൾ')}</h2>
-              <Link href="/services" className="hidden sm:flex text-[#0A3D91] font-semibold items-center hover:underline">
+              <Link href="/facilities" className="hidden sm:flex text-[#0A3D91] font-semibold items-center hover:underline">
                 {t('View All', 'എല്ലാം കാണുക')} <ChevronRight className="w-4 h-4 ml-1" />
               </Link>
             </div>

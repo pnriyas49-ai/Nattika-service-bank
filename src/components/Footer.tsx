@@ -44,10 +44,10 @@ export default function Footer() {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">{t('Quick Links', 'പ്രധാന ലിങ്കുകൾ')}</h4>
             <ul className="space-y-2 text-sm text-blue-200">
-              <li><Link href="/loans" className="hover:text-white transition-colors">{t('Loans', 'ലോണുകൾ')}</Link></li>
-              <li><Link href="/deposits" className="hover:text-white transition-colors">{t('Deposits', 'നിക്ഷേപങ്ങൾ')}</Link></li>
-              <li><Link href="/services" className="hover:text-white transition-colors">{t('Services', 'സേവനങ്ങൾ')}</Link></li>
+              <li><Link href="/facilities" className="hover:text-white transition-colors">{t('Facilities', 'സൗകര്യങ്ങൾ')}</Link></li>
+              <li><Link href="/about" className="hover:text-white transition-colors">{t('About Us', 'ഞങ്ങളെ കുറിച്ച്')}</Link></li>
               <li><Link href="/news" className="hover:text-white transition-colors">{t('News', 'വാർത്തകൾ')}</Link></li>
+              <li><Link href="/gallery/photos" className="hover:text-white transition-colors">{t('Gallery', 'ഗാലറി')}</Link></li>
             </ul>
           </div>
 
