@@ -3,7 +3,11 @@ import { config, fields, collection, singleton } from '@keystatic/core';
 export default config({
   // Use 'local' in development, and 'github' for production
   storage: {
-    kind: 'local',
+    kind: 'github',
+    repo: {
+      owner: 'pnriyas49-ai',
+      name: 'Nattika-service-bank',
+    },
   },
   collections: {
     news: collection({
