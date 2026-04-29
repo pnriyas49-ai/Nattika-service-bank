@@ -1,68 +1,99 @@
 'use client';
 
+import { useLanguage } from '@/lib/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import PageBackground from '@/components/ui/PageBackground';
 import Link from 'next/link';
 import { Camera, Film, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function GalleryHubPage() {
-  return (
-    <>
-      <Navbar />
-      <main className="flex-1 pt-32 pb-12 bg-[#F8FAFC] min-h-screen border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-[#0A3D91] mb-4">Our Gallery</h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Explore the moments that define our community and the bank's active participation in local growth.
-            </p>
-          </div>
+const fadeUp = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 30, stiffness: 200 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+export default function GalleryHubPage() {
+  const { t } = useLanguage();
+
+  return (
+    <div style={{ background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
+      <Navbar />
+
+      {/* ═══ HERO ═══ */}
+      <section style={{ minHeight: '45vh', display: 'flex', alignItems: 'center', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+        <PageBackground imageUrl="/images/about/heroImage.webp" overlayOpacity={0.75} blurAmount="3px" />
+        <div className="container section" style={{ position: 'relative', zIndex: 1 }}>
+          <motion.div initial="hidden" animate="show" variants={stagger} className="hero-text-shadow" style={{ textAlign: 'center', color: 'white', maxWidth: '700px', margin: '0 auto' }}>
+            <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+              🖼️ {t('Media Hub', 'മീഡിയ ഹബ്')}
+            </motion.p>
+            <motion.h1 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(2.5rem, 5vw + 1rem, 4.5rem)', lineHeight: 1.1 }}>
+              {t('Our Gallery', 'ഞങ്ങളുടെ ഗാലറി')}
+            </motion.h1>
+            <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-lg)', color: 'rgba(255,255,255,0.85)', marginTop: '1rem' }}>
+              {t("Explore the moments that define our community and the bank's active participation in local growth.", "ഞങ്ങളുടെ കമ്മ്യൂണിറ്റിയുടെ നിമിഷങ്ങൾ ഇവിടെ കാണാം.")}
+            </motion.p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══ CONTENT ═══ */}
+      <section className="section">
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(350px, 100%), 1fr))', gap: '2rem', maxWidth: '900px', margin: '0 auto' }}>
+            
             {/* Photo Gallery Card */}
-            <motion.div 
-               whileHover={{ y: -10 }}
-               className="group relative bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all"
-            >
-              <div className="h-64 bg-gradient-to-br from-blue-100 to-[#0A3D91]/20 flex items-center justify-center relative overflow-hidden">
-                <Camera className="w-24 h-24 text-[#0A3D91] opacity-20 absolute rotate-12 -right-4 -bottom-4 group-hover:scale-110 transition-transform" />
-                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg relative z-10 group-hover:scale-110 transition-transform">
-                   <Camera className="w-10 h-10 text-[#0A3D91]" />
-                </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+               className="bento-card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ height: '200px', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                 <div style={{ position: 'absolute', right: '-10%', bottom: '-10%', opacity: 0.05, transform: 'rotate(-15deg)' }}>
+                    <Camera size={200} color="var(--trust-blue)" />
+                 </div>
+                 <div style={{ width: 80, height: 80, borderRadius: 'var(--r-full)', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: 'var(--shadow-sm)' }}>
+                    <Camera size={32} color="var(--trust-blue)" />
+                 </div>
               </div>
-              <div className="p-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Photo Gallery</h2>
-                <p className="text-gray-500 mb-8">View photos from recent branch events, inaugurations, and community programs.</p>
-                <Link href="/gallery/photos" className="inline-flex items-center justify-center w-full bg-[#0A3D91] hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-full transition-colors">
-                  View Photos <ChevronRight className="ml-2 w-5 h-5" />
+              <div style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-xl)', color: 'var(--text)', marginBottom: '0.5rem' }}>
+                  {t('Photo Gallery', 'ഫോട്ടോ ഗാലറി')}
+                </h2>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', flex: 1 }}>
+                  {t('View photos from recent branch events, inaugurations, and community programs.', 'സമീപകാല പരിപാടികളുടെയും മറ്റും ഫോട്ടോകൾ കാണുക.')}
+                </p>
+                <Link href="/gallery/photos" className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '1rem', background: 'var(--trust-blue)' }}>
+                  {t('View Photos', 'ഫോട്ടോകൾ കാണുക')} <ChevronRight size={18} />
                 </Link>
               </div>
             </motion.div>
 
             {/* Video Gallery Card */}
-            <motion.div 
-               whileHover={{ y: -10 }}
-               className="group relative bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl transition-all"
-            >
-              <div className="h-64 bg-gradient-to-br from-green-100 to-[#047038]/20 flex items-center justify-center relative overflow-hidden">
-                <Film className="w-24 h-24 text-[#047038] opacity-20 absolute -rotate-12 -left-4 -top-4 group-hover:scale-110 transition-transform" />
-                <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg relative z-10 group-hover:scale-110 transition-transform">
-                   <Film className="w-10 h-10 text-[#047038]" />
-                </div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+               className="bento-card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ height: '200px', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                 <div style={{ position: 'absolute', left: '-10%', top: '-10%', opacity: 0.05, transform: 'rotate(15deg)' }}>
+                    <Film size={200} color="var(--green)" />
+                 </div>
+                 <div style={{ width: 80, height: 80, borderRadius: 'var(--r-full)', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, boxShadow: 'var(--shadow-sm)' }}>
+                    <Film size={32} color="var(--green)" />
+                 </div>
               </div>
-              <div className="p-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Video Gallery</h2>
-                <p className="text-gray-500 mb-8">Watch highlights of our services, financial awareness videos, and branch videos.</p>
-                <Link href="/gallery/videos" className="inline-flex items-center justify-center w-full bg-[#047038] hover:bg-green-800 text-white font-semibold py-3 px-6 rounded-full transition-colors">
-                  Watch Videos <ChevronRight className="ml-2 w-5 h-5" />
+              <div style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-xl)', color: 'var(--text)', marginBottom: '0.5rem' }}>
+                  {t('Video Gallery', 'വീഡിയോ ഗാലറി')}
+                </h2>
+                <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', flex: 1 }}>
+                  {t('Watch highlights of our services, financial awareness videos, and branch videos.', 'ഞങ്ങളുടെ സേവനങ്ങളുടെയും മറ്റും വീഡിയോകൾ കാണുക.')}
+                </p>
+                <Link href="/gallery/videos" className="btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '1rem', background: 'var(--green)', color: 'white' }}>
+                  {t('Watch Videos', 'വീഡിയോകൾ കാണുക')} <ChevronRight size={18} />
                 </Link>
               </div>
             </motion.div>
+
           </div>
         </div>
-      </main>
+      </section>
+
       <Footer />
-    </>
+    </div>
   );
 }
