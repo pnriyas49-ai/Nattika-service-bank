@@ -1,20 +1,17 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PageBackground from '@/components/ui/PageBackground';
-import { MapPin, Phone, Mail, Clock, Send, ChevronRight } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const fadeUp = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 30, stiffness: 200 } } };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
 
-const BRANCHES = [
-  { name: 'Main Branch', nameMl: 'പ്രധാന ശാഖ', address: 'P.O Nattika, Thriprayar, Thrissur - 680566', phone: '0487 2395310, 2391452', mobile: '+91 9387054840', email: 'nattikascb@gmail.com', color: '#0A3D91' },
-  { name: 'Nattika Beach', nameMl: 'നാട്ടിക ബീച്ച്', address: 'Nattika Beach, Thriprayar', phone: '0487 2393343', color: '#047038' },
-  { name: 'Cherkkara', nameMl: 'ചെർക്കര', address: 'Cherkkara, Nattika, Thriprayar', phone: '0487 2396226', color: '#D4AF37' },
-];
+const BRANCH_COLORS = ['#0A3D91', '#047038', '#D4AF37', '#8E24AA'];
 
 const inputStyle: React.CSSProperties = {
   width: '100%', height: '48px', padding: '0 1rem',
@@ -24,8 +21,26 @@ const inputStyle: React.CSSProperties = {
   outline: 'none', transition: 'all 0.2s ease',
 };
 
+const DEFAULT_BRANCHES = [
+  { name: 'Main Branch', nameMl: 'പ്രധാന ശാഖ', address: 'P.O Nattika, Thriprayar, Thrissur - 680566', phone: '0487 2395310, 2391452', mobile: '+91 9387054840', email: 'nattikascb@gmail.com' },
+  { name: 'Nattika Beach', nameMl: 'നാട്ടിക ബീച്ച്', address: 'Nattika Beach, Thriprayar', phone: '0487 2393343' },
+  { name: 'Cherkkara', nameMl: 'ചെർക്കര', address: 'Cherkkara, Nattika, Thriprayar', phone: '0487 2396226' },
+];
+
 export default function ContactPage() {
   const { t, language } = useLanguage();
+  const [contactData, setContactData] = useState<any>(null);
+
+  useEffect(() => {
+    fetch('/api/admin?model=contact&type=singleton')
+      .then(r => r.json())
+      .then(d => setContactData(d))
+      .catch(() => {});
+  }, []);
+
+  const branches = contactData?.branches || DEFAULT_BRANCHES;
+  const heroImage = contactData?.heroImage || '/images/about/heroImage.webp';
+  const workingHours = contactData?.workingHours || '9:30 AM to 5:00 PM (Mon-Sat)';
 
   return (
     <div style={{ background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
@@ -33,7 +48,7 @@ export default function ContactPage() {
 
       {/* ═══ HERO ═══ */}
       <section style={{ minHeight: '45vh', display: 'flex', alignItems: 'center', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
-        <PageBackground imageUrl="/images/about/heroImage.webp" overlayOpacity={0.75} blurAmount="3px" />
+        <PageBackground imageUrl={heroImage} overlayOpacity={0.75} blurAmount="3px" />
         <div className="container section" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div initial="hidden" animate="show" variants={stagger} className="hero-text-shadow" style={{ textAlign: 'center', color: 'white', maxWidth: '700px', margin: '0 auto' }}>
             <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
@@ -54,43 +69,43 @@ export default function ContactPage() {
         <div className="container">
           <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={stagger}
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: '1.25rem' }}>
-            {BRANCHES.map((b, i) => (
-              <motion.div key={i} variants={fadeUp} className="bento-card" style={{ padding: '1.75rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                  <div style={{ width: 40, height: 40, borderRadius: 'var(--r-md)', background: `${b.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <MapPin size={20} color={b.color} />
-                  </div>
-                  <div>
+            {branches.map((b: any, i: number) => {
+              const color = BRANCH_COLORS[i % BRANCH_COLORS.length];
+              return (
+                <motion.div key={i} variants={fadeUp} className="bento-card" style={{ padding: '1.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 'var(--r-md)', background: `${color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <MapPin size={20} color={color} />
+                    </div>
                     <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'var(--text-lg)', color: 'var(--text)' }}>
-                      {language === 'en' ? b.name : b.nameMl}
+                      {language === 'en' ? b.name : (b.nameMl || b.name)}
                     </h3>
                   </div>
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
-                    <MapPin size={14} style={{ flexShrink: 0, marginTop: '3px', color: b.color }} />
-                    <span>{b.address}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
-                    <Phone size={14} style={{ flexShrink: 0, color: b.color }} />
-                    <a href={`tel:${b.phone.replace(/\s/g, '')}`} style={{ color: 'var(--text-muted)' }}>{b.phone}</a>
-                  </div>
-                  {b.mobile && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
-                      <Phone size={14} style={{ flexShrink: 0, color: b.color }} />
-                      <a href={`tel:${b.mobile.replace(/\s/g, '')}`} style={{ color: 'var(--text-muted)' }}>Mob: {b.mobile}</a>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
+                      <MapPin size={14} style={{ flexShrink: 0, marginTop: '3px', color }} />
+                      <span>{b.address}</span>
                     </div>
-                  )}
-                  {b.email && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
-                      <Mail size={14} style={{ flexShrink: 0, color: b.color }} />
-                      <a href={`mailto:${b.email}`} style={{ color: 'var(--text-muted)' }}>{b.email}</a>
+                      <Phone size={14} style={{ flexShrink: 0, color }} />
+                      <a href={`tel:${b.phone?.replace(/\s/g, '')}`} style={{ color: 'var(--text-muted)' }}>{b.phone}</a>
                     </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+                    {b.mobile && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
+                        <Phone size={14} style={{ flexShrink: 0, color }} />
+                        <a href={`tel:${b.mobile.replace(/\s/g, '')}`} style={{ color: 'var(--text-muted)' }}>Mob: {b.mobile}</a>
+                      </div>
+                    )}
+                    {b.email && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>
+                        <Mail size={14} style={{ flexShrink: 0, color }} />
+                        <a href={`mailto:${b.email}`} style={{ color: 'var(--text-muted)' }}>{b.email}</a>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
           </motion.div>
 
           {/* Working Hours */}
@@ -99,7 +114,7 @@ export default function ContactPage() {
             <Clock size={20} color="var(--accent)" />
             <div>
               <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--accent)' }}>{t('Working Hours', 'പ്രവർത്തന സമയം')}: </span>
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>{t('9:30 AM to 5:00 PM (Mon–Sat)', '9:30 AM മുതൽ 5:00 PM വരെ (തിങ്കൾ–ശനി)')}</span>
+              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)' }}>{workingHours}</span>
             </div>
           </motion.div>
         </div>
@@ -116,9 +131,6 @@ export default function ContactPage() {
               <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)' }}>
                 {t('How Can We Help?', 'എങ്ങനെ സഹായിക്കാം?')}
               </h2>
-              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', marginTop: '0.5rem' }}>
-                {t('Fill out the form and our team will get back to you shortly.', 'ഫോം പൂരിപ്പിക്കുക, ഞങ്ങൾ ഉടൻ മറുപടി നൽകും.')}
-              </p>
             </div>
 
             <div className="bento-card" style={{ padding: 'clamp(1.5rem,3vw,2.5rem)' }}>
@@ -129,7 +141,7 @@ export default function ContactPage() {
                     <input type="text" placeholder="John Doe" style={inputStyle} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('Phone Number', 'ഫോൺ')}</label>
+                    <label style={{ display: 'block', fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--text)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('Phone', 'ഫോൺ')}</label>
                     <input type="tel" placeholder="+91 90000 00000" style={inputStyle} />
                   </div>
                 </div>

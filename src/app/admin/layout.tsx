@@ -9,6 +9,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Video Gallery', href: '/admin/videos' },
     { name: 'Homepage Settings', href: '/admin/homepage' },
     { name: 'About Page', href: '/admin/about' },
+    { name: 'Contact Page', href: '/admin/contact' },
     { name: 'Bank Settings', href: '/admin/settings' },
   ];
 
