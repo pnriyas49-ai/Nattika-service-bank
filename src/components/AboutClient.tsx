@@ -1,251 +1,162 @@
 'use client';
-
-import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/LanguageContext';
-import { ShieldCheck, Target, TrendingUp, Users, PiggyBank, HandCoins, Building2, UserCircle } from 'lucide-react';
+import { ShieldCheck, Target, TrendingUp, Users, PiggyBank, HandCoins, UserCircle } from 'lucide-react';
+import PageBackground from './ui/PageBackground';
+
+const fadeUp = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 30, stiffness: 200 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
 
 export default function AboutClient({ aboutData }: { aboutData: any }) {
-  const { t } = useLanguage();
-
+  const { t, language } = useLanguage();
   if (!aboutData) return null;
 
-  const statIcons = [
-    <PiggyBank className="w-8 h-8 text-[#047038]" />,
-    <HandCoins className="w-8 h-8 text-blue-600" />,
-    <TrendingUp className="w-8 h-8 text-indigo-500" />,
-    <Users className="w-8 h-8 text-orange-500" />
-  ];
-
   const stats = [
-    { label: t('Total Deposits', 'ആകെ നിക്ഷേപം'), value: aboutData.stats.deposits, icon: statIcons[0], color: 'bg-green-50' },
-    { label: t('Total Loans', 'ആകെ വായ്പകൾ'), value: aboutData.stats.loans, icon: statIcons[1], color: 'bg-blue-50' },
-    { label: t('Working Capital', 'പ്രവർത്തന മൂലധനം'), value: aboutData.stats.capital, icon: statIcons[2], color: 'bg-indigo-50' },
-    { label: t('Total Members', 'ആകെ അംഗങ്ങൾ'), value: aboutData.stats.members, icon: statIcons[3], color: 'bg-orange-50' }
+    { label: t('Total Deposits', 'ആകെ നിക്ഷേപം'), value: aboutData.stats.deposits, icon: PiggyBank, color: '#047038', bg: 'rgba(4,112,56,0.1)' },
+    { label: t('Total Loans', 'ആകെ വായ്പകൾ'), value: aboutData.stats.loans, icon: HandCoins, color: '#1E88E5', bg: 'rgba(30,136,229,0.1)' },
+    { label: t('Working Capital', 'പ്രവർത്തന മൂലധനം'), value: aboutData.stats.capital, icon: TrendingUp, color: '#8E24AA', bg: 'rgba(142,36,170,0.1)' },
+    { label: t('Total Members', 'ആകെ അംഗങ്ങൾ'), value: aboutData.stats.members, icon: Users, color: '#D4AF37', bg: 'rgba(212,175,55,0.1)' },
   ];
 
   return (
-    <div className="pb-24 pt-20">
-      {/* CINEMATIC HERO SECTION */}
-      <section className="relative w-full min-h-[50vh] flex items-center justify-center overflow-hidden">
-        {aboutData.heroImage ? (
-          <img 
-            src={aboutData.heroImage} 
-            alt="About Nattika Bank" 
-            className="absolute inset-0 w-full h-full object-cover z-0"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-[#0A3D91] z-0" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A3D91] via-[#0A3D91]/60 to-transparent mix-blend-multiply z-10" />
-        <div className="absolute inset-0 bg-black/20 z-10" />
-
-        <div className="relative z-20 text-center px-4 max-w-4xl mx-auto py-20">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-extrabold text-white mb-4 drop-shadow-lg"
-          >
-            {t(aboutData.heroTitle, 'ഞങ്ങളുടെ പാരമ്പര്യം')}
-          </motion.h1>
-          <motion.div 
-            initial={{ width: 0 }}
-            animate={{ width: '80px' }}
-            className="h-1.5 bg-green-500 mx-auto mb-6 rounded-full"
-          />
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-blue-50 text-xl md:text-2xl font-medium tracking-wide drop-shadow-md"
-          >
-            {t(aboutData.heroSubtitle, 'നാട്ടിക സർവീസ് സഹകരണ ബാങ്ക്')}
-          </motion.p>
-        </div>
-      </section>
-
-      {/* OUR STORY SECTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="flex flex-col lg:flex-row items-center gap-16">
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="w-full lg:w-1/2"
-          >
-            <div className="relative">
-              <div className="absolute -top-4 -left-4 w-24 h-24 bg-green-50 rounded-2xl -z-10" />
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-blue-50 rounded-2xl -z-10" />
-              <img 
-                src={aboutData.heroImage || "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=2670&auto=format&fit=crop"} 
-                alt="Bank History" 
-                className="rounded-3xl shadow-2xl shadow-blue-900/10 w-full object-cover h-[400px]"
-              />
-            </div>
-          </motion.div>
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="w-full lg:w-1/2"
-          >
-            <h2 className="text-sm font-bold text-[#047038] uppercase tracking-[0.2em] mb-3">{t('The Story', 'ചരിത്രം')}</h2>
-            <h3 className="text-3xl md:text-4xl font-extrabold text-[#0A3D91] mb-6 leading-tight">
-              {t('Growing Since 1933', '1933 മുതൽ നിങ്ങളോടൊപ്പം')}
-            </h3>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6 whitespace-pre-line">
-              {t(aboutData.history, aboutData.history)}
-            </p>
-            <div className="flex items-center space-x-6 text-[#0A3D91]">
-               <div className="flex flex-col">
-                 <span className="text-3xl font-bold">90+</span>
-                 <span className="text-sm text-gray-500 uppercase font-bold tracking-wider">{t('Years of Trust', 'വർഷത്തെ വിശ്വാസം')}</span>
-               </div>
-               <div className="w-px h-12 bg-gray-200" />
-               <div className="flex flex-col">
-                 <span className="text-3xl font-bold">4+</span>
-                 <span className="text-sm text-gray-500 uppercase font-bold tracking-wider">{t('Branches', 'ശാഖകൾ')}</span>
-               </div>
-            </div>
+    <div style={{ background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
+      {/* ═══ HERO ═══ */}
+      <section style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+        <PageBackground imageUrl={aboutData.heroImage} overlayOpacity={0.7} blurAmount="3px" />
+        <div className="container section" style={{ position: 'relative', zIndex: 1 }}>
+          <motion.div initial="hidden" animate="show" variants={stagger} className="hero-text-shadow" style={{ textAlign: 'center', color: 'white', maxWidth: '700px', margin: '0 auto' }}>
+            <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+              📜 {t('Our Legacy', 'ഞങ്ങളുടെ പാരമ്പര്യം')}
+            </motion.p>
+            <motion.h1 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(2.5rem, 5vw + 1rem, 4.5rem)', lineHeight: 1.1 }}>
+              {t(aboutData.heroTitle, 'ഞങ്ങളുടെ ചരിത്രം')}
+            </motion.h1>
+            <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-lg)', color: 'rgba(255,255,255,0.85)', marginTop: '1rem' }}>
+              {t(aboutData.heroSubtitle, 'നാട്ടിക സർവീസ് സഹകരണ ബാങ്ക്')}
+            </motion.p>
           </motion.div>
         </div>
       </section>
 
-      {/* STATS BENTO SECTION */}
-      <section className="bg-white py-24 border-y border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('Financial Strength', 'സാമ്പത്തിക കരുത്ത്')}</h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">{t('Our numbers tell the story of a stable and growing community institution dedicated to prosperity.', 'ഞങ്ങളുടെ സാമ്പത്തിക വളർച്ചയും നേട്ടങ്ങളും.')}</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm hover:shadow-xl transition-all group"
-              >
-                <div className={`w-16 h-16 ${stat.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  {stat.icon}
-                </div>
-                <h4 className="text-gray-500 font-medium mb-1">{stat.label}</h4>
-                <div className="text-3xl font-extrabold text-[#0A3D91]">{stat.value}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* MISSION & VISION SECTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-[#0A3D91] p-10 rounded-[2.5rem] text-white relative overflow-hidden group shadow-2xl shadow-blue-900/20"
-          >
-            <div className="relative z-10">
-              <Target className="w-12 h-12 text-green-400 mb-6" />
-              <h3 className="text-3xl font-bold mb-4">{t('Our Mission', 'ഞങ്ങളുടെ ലക്ഷ്യം')}</h3>
-              <p className="text-blue-100 text-lg leading-relaxed opacity-90">
-                {t(aboutData.mission, aboutData.mission)}
+      {/* ═══ STORY ═══ */}
+      <section style={{ background: 'var(--surface)' }} className="section">
+        <div className="container">
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(400px, 100%), 1fr))', gap: '3rem', alignItems: 'center' }}>
+            <div style={{ position: 'relative' }}>
+              <div style={{ position: 'absolute', top: '-8px', left: '-8px', width: '4rem', height: '4rem', background: 'var(--accent-bg)', borderRadius: 'var(--r-lg)', zIndex: 0 }} />
+              <img src={aboutData.heroImage || 'https://images.unsplash.com/photo-1541339907198-e08756ebafe3?w=800'} alt="Bank" style={{ borderRadius: 'var(--r-xl)', width: '100%', height: 'auto', objectFit: 'cover', position: 'relative', zIndex: 1, boxShadow: 'var(--shadow-lg)' }} />
+            </div>
+            <div>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{t('The Heritage', 'പാരമ്പര്യം')}</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)', marginBottom: '1rem' }}>
+                {t('Growing Since 1933', '1933 മുതൽ വളർച്ചയുടെ പാതയിൽ')}
+              </h2>
+              <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1.5rem', whiteSpace: 'pre-line' as const }}>
+                {t(aboutData.history, aboutData.history)}
               </p>
+              <div style={{ display: 'flex', gap: '2rem' }}>
+                <div><div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--trust-blue)' }}>90+</div><div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-faint)', fontWeight: 600, textTransform: 'uppercase' }}>{t('Years', 'വർഷങ്ങൾ')}</div></div>
+                <div style={{ width: '1px', background: 'var(--border)' }} />
+                <div><div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--trust-blue)' }}>4+</div><div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-faint)', fontWeight: 600, textTransform: 'uppercase' }}>{t('Branches', 'ശാഖകൾ')}</div></div>
+              </div>
             </div>
-            <Target className="absolute -bottom-10 -right-10 w-48 h-48 text-white/5 group-hover:scale-110 transition-transform duration-700" />
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="bg-white p-10 rounded-[2.5rem] border border-gray-100 relative overflow-hidden group shadow-xl shadow-blue-900/5"
-          >
-            <div className="relative z-10">
-              <ShieldCheck className="w-12 h-12 text-[#047038] mb-6" />
-              <h3 className="text-3xl font-extrabold text-[#0A3D91] mb-4">{t('Our Vision', 'ഞങ്ങളുടെ കാഴ്ചപ്പാട്')}</h3>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                 {t(aboutData.vision, aboutData.vision)}
-              </p>
-            </div>
-            <ShieldCheck className="absolute -bottom-10 -right-10 w-48 h-48 text-gray-50 group-hover:scale-110 transition-transform duration-700" />
           </motion.div>
         </div>
       </section>
 
-      {/* LEADERSHIP SECTION (Board of Directors) */}
-      <section className="bg-gray-50 py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-[#0A3D91] mb-4">{t('Board of Directors', 'ഭരണസമിതി അംഗങ്ങൾ')}</h2>
-            <div className="h-1 w-20 bg-green-500 mx-auto rounded-full" />
+      {/* ═══ STATS ═══ */}
+      <section className="section">
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem,4vw,3.5rem)' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)' }}>{t('Financial Strength', 'സാമ്പത്തിക കരുത്ത്')}</h2>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {aboutData.board?.length > 0 ? aboutData.board.map((member: any, i: number) => (
-              <motion.div 
-                key={i}
-                whileHover={{ y: -8 }}
-                className="bg-white p-6 rounded-3xl text-center shadow-sm hover:shadow-xl transition-all border border-gray-100 group"
-              >
-                <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-gray-50 group-hover:border-green-100 transition-colors">
-                  {member.image ? (
-                    <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-300">
-                      <UserCircle className="w-16 h-16" />
-                    </div>
-                  )}
-                </div>
-                <h4 className="text-xl font-bold text-gray-800 mb-1">{member.name}</h4>
-                <p className="text-[#047038] font-bold text-sm uppercase tracking-wider">{t(member.designation, member.designation)}</p>
-              </motion.div>
-            )) : (
-              <div className="col-span-full py-12 text-center text-gray-400 bg-white rounded-3xl border border-dashed border-gray-200 uppercase tracking-widest text-sm font-bold">
-                 {t('Board Members to be added from CMS', 'ഭരണസമിതി അംഗങ്ങളെ ചേർക്കുക')}
-              </div>
-            )}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))', gap: '1rem' }}>
+            {stats.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                  className="bento-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 'var(--r-md)', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem' }}>
+                    <Icon size={24} color={s.color} />
+                  </div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-faint)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>{s.label}</div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--trust-blue)' }}>{s.value}</div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* BANK STAFF SECTION */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold text-[#0A3D91] mb-4">{t('Our Dedicated Staff', 'ഞങ്ങളുടെ ജീവനക്കാർ')}</h2>
-            <p className="text-gray-500">{t('The professional team driving excellence in every transaction.', 'ഞങ്ങളുടെ സേവന മികവിന് നേതൃത്വം നൽകുന്ന പ്രൊഫഷണൽ ടീം.')}</p>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {aboutData.staff?.length > 0 ? aboutData.staff.map((member: any, i: number) => (
-              <div key={i} className="flex items-center p-4 bg-white rounded-2xl shadow-sm border border-gray-50 hover:shadow-md transition-shadow">
-                <div className="w-14 h-14 rounded-full overflow-hidden mr-4">
-                  {member.image ? (
-                    <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-blue-50 flex items-center justify-center text-blue-200">
-                      <UserCircle className="w-8 h-8" />
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <h5 className="font-bold text-gray-800">{member.name}</h5>
-                  <p className="text-xs text-gray-500 font-medium uppercase tracking-tight">{t(member.designation, member.designation)}</p>
-                </div>
-              </div>
-            )) : (
-              <div className="col-span-full py-12 text-center text-gray-400 border border-dashed border-gray-200 rounded-3xl uppercase tracking-widest text-sm font-bold">
-                 {t('Staff Members to be added from CMS', 'ജീവനക്കാരെ ചേർക്കുക')}
-              </div>
-            )}
+      {/* ═══ MISSION & VISION ═══ */}
+      <section style={{ background: 'var(--surface)' }} className="section">
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(400px, 100%), 1fr))', gap: '1.5rem' }}>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              className="bento-card" style={{ padding: 'clamp(1.5rem,3vw,2.5rem)', background: 'var(--trust-blue)', color: 'white', borderColor: 'transparent' }}>
+              <Target size={32} color="#10B981" style={{ marginBottom: '1rem' }} />
+              <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-xl)', marginBottom: '1rem' }}>{t('Our Mission', 'ഞങ്ങളുടെ ലക്ഷ്യം')}</h3>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.8)', lineHeight: 1.7 }}>{t(aboutData.mission, aboutData.mission)}</p>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+              className="bento-card" style={{ padding: 'clamp(1.5rem,3vw,2.5rem)' }}>
+              <ShieldCheck size={32} color="#047038" style={{ marginBottom: '1rem' }} />
+              <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-xl)', marginBottom: '1rem', color: 'var(--trust-blue)' }}>{t('Our Vision', 'ഞങ്ങളുടെ കാഴ്ചപ്പാട്')}</h3>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', lineHeight: 1.7 }}>{t(aboutData.vision, aboutData.vision)}</p>
+            </motion.div>
           </div>
         </div>
       </section>
+
+      {/* ═══ BOARD ═══ */}
+      {aboutData.board?.length > 0 && (
+        <section className="section">
+          <div className="container">
+            <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem,4vw,3.5rem)' }}>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{t('Governance', 'ഭരണസമിതി')}</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)' }}>{t('Board of Directors', 'ഭരണസമിതി അംഗങ്ങൾ')}</h2>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem' }}>
+              {aboutData.board.map((m: any, i: number) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                  className="bento-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+                  <div style={{ width: 80, height: 80, borderRadius: 'var(--r-full)', overflow: 'hidden', margin: '0 auto 1rem', border: '3px solid var(--surface-2)' }}>
+                    {m.image ? <img src={m.image} alt={m.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><UserCircle size={40} color="var(--text-faint)" /></div>}
+                  </div>
+                  <h4 style={{ fontWeight: 700, fontSize: 'var(--text-sm)', color: 'var(--text)' }}>{m.name}</h4>
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--green)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{m.designation}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ═══ STAFF ═══ */}
+      {aboutData.staff?.length > 0 && (
+        <section style={{ background: 'var(--surface)' }} className="section">
+          <div className="container">
+            <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem,4vw,3.5rem)' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)' }}>{t('Our Team', 'ഞങ്ങളുടെ ടീം')}</h2>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
+              {aboutData.staff.map((m: any, i: number) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', background: 'var(--bg)', borderRadius: 'var(--r-md)', border: '1px solid var(--border)' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 'var(--r-full)', overflow: 'hidden', flexShrink: 0 }}>
+                    {m.image ? <img src={m.image} alt={m.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><UserCircle size={20} color="var(--text-faint)" /></div>}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 'var(--text-sm)', color: 'var(--text)' }}>{m.name}</div>
+                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-faint)' }}>{m.designation}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
     </div>
   );
 }

@@ -1,0 +1,105 @@
+'use client';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+
+interface PageBackgroundProps {
+  imageUrl?: string;
+  videoUrl?: string;
+  overlayOpacity?: number;
+  blurAmount?: string;
+}
+
+export default function PageBackground({
+  imageUrl,
+  videoUrl,
+  overlayOpacity = 0.5,
+  blurAmount = '4px',
+}: PageBackgroundProps) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+
+  // Smooth vertical parallax based on scroll
+  const yScroll = useTransform(scrollY, [0, 1000], ['0%', '20%']);
+  const scaleScroll = useTransform(scrollY, [0, 1000], [1.05, 1.15]);
+
+  // Smooth mouse tilt using springs
+  const springConfig = { damping: 30, stiffness: 100 };
+  const rotateX = useSpring(useTransform(mouseY, [-1, 1], [3, -3]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-1, 1], [-3, 3]), springConfig);
+  const translateX = useSpring(useTransform(mouseX, [-1, 1], [15, -15]), springConfig);
+
+  function handleMouseMove(e: React.MouseEvent) {
+    if (!containerRef.current) return;
+    const { left, top, width, height } = containerRef.current.getBoundingClientRect();
+    const x = ((e.clientX - left) / width - 0.5) * 2; // Range: -1 to 1
+    const y = ((e.clientY - top) / height - 0.5) * 2; // Range: -1 to 1
+    mouseX.set(x);
+    mouseY.set(y);
+  }
+
+  function handleMouseLeave() {
+    mouseX.set(0);
+    mouseY.set(0);
+  }
+
+  if (!imageUrl && !videoUrl) return null;
+
+  return (
+    <div
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="absolute inset-0 w-full h-full overflow-hidden z-0 perspective-3d"
+    >
+      <motion.div
+        style={{
+          position: 'absolute',
+          inset: '-10%', // Oversized for parallax
+          y: yScroll,
+          scale: scaleScroll,
+          rotateX,
+          rotateY,
+          x: translateX,
+          transformStyle: 'preserve-3d',
+        }}
+        className="w-[120%] h-[120%]"
+      >
+        {videoUrl ? (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src={videoUrl} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            src={imageUrl}
+            alt="Page background"
+            className="w-full h-full object-cover"
+          />
+        )}
+      </motion.div>
+
+      {/* Modern Overlay with Blur (Glass-like depth) */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background: `linear-gradient(to bottom, 
+            rgba(10, 61, 145, ${overlayOpacity * 0.8}) 0%, 
+            rgba(10, 61, 145, ${overlayOpacity * 0.4}) 50%, 
+            rgba(10, 61, 145, ${overlayOpacity * 0.9}) 100%)`,
+          backdropFilter: `blur(${blurAmount})`,
+          WebkitBackdropFilter: `blur(${blurAmount})`,
+        }}
+      />
+      
+      {/* Subtle vignettes */}
+      <div className="absolute inset-0 z-20 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.2)_100%)]" />
+    </div>
+  );
+}

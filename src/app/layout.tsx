@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/LanguageContext";
-import Navbar from "@/components/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,10 +21,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} font-sans h-full antialiased`}
+      className={`${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-[#F8FAFC]">
+      <body>
         <LanguageProvider>
           {children}
         </LanguageProvider>

@@ -1,0 +1,26 @@
+{
+  "heroImage": "/images/about/heroImage.webp",
+  "branches": [
+    {
+      "name": "Main Branch",
+      "nameMl": "പ്രധാന ശാഖ",
+      "address": "P.O Nattika, Thriprayar, Thrissur - 680566",
+      "phone": "0487 2395310, 2391452",
+      "mobile": "+91 9387054840",
+      "email": "nattikascb@gmail.com"
+    },
+    {
+      "name": "Nattika Beach",
+      "nameMl": "നാട്ടിക ബീച്ച്",
+      "address": "Nattika Beach, Thriprayar",
+      "phone": "0487 2393343"
+    },
+    {
+      "name": "Cherkkara",
+      "nameMl": "ചെർക്കര",
+      "address": "Cherkkara, Nattika, Thriprayar",
+      "phone": "0487 2396226"
+    }
+  ],
+  "workingHours": "9:30 AM to 5:00 PM (Mon-Sat)"
+}

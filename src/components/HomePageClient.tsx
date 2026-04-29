@@ -1,275 +1,241 @@
 'use client';
-
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/LanguageContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { ChevronRight, Percent, Briefcase, Home, Truck, Coins, ShieldCheck, HeartHandshake, History } from 'lucide-react';
+import { ChevronRight, Percent, Briefcase, Home, Truck, Coins, ShieldCheck, HeartHandshake, ArrowRight } from 'lucide-react';
+import PageBackground from './ui/PageBackground';
 import HeroCarousel from './HeroCarousel';
 
-export default function HomePageClient({ 
-  homepageData, 
-  loansData, 
-  depositsData, 
-  settingsData 
-}: { 
-  homepageData: any; 
-  loansData?: any[]; 
-  depositsData?: any[];
-  settingsData?: any 
-}) {
-  const { t } = useLanguage();
+const fadeUp = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 30, stiffness: 200 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
 
-  // Find the highest interest rate for the Top Deposit Rate block
-  const topDeposit = depositsData && depositsData.length > 0 
+const STATS = [
+  { num: '90+', label: 'Years of Trust', labelMl: 'വർഷത്തെ വിശ്വാസം', color: '#D4AF37' },
+  { num: '25K+', label: 'Members', labelMl: 'അംഗങ്ങൾ', color: '#10B981' },
+  { num: '₹550Cr', label: 'Working Capital', labelMl: 'പ്രവർത്തന മൂലധനം', color: '#0EA5E9' },
+];
+
+const SERVICES = [
+  { icon: Coins, title: 'Gold Loan', titleMl: 'സ്വർണ്ണ വായ്പ', desc: 'Instant cash against gold with best valuation rates.', descMl: 'ഏറ്റവും മികച്ച വിലയിരുത്തലോടെ സ്വർണ്ണത്തിന് തൽക്ഷണ വായ്പ.', color: '#D4AF37', bg: 'rgba(212,175,55,0.1)' },
+  { icon: Home, title: 'Mortgage Loan', titleMl: 'ഭവന വായ്പ', desc: 'Affordable home and property loans up to ₹50 Lakhs.', descMl: '₹50 ലക്ഷം വരെ ഭവന, വസ്തു വായ്പകൾ.', color: '#047038', bg: 'rgba(4,112,56,0.1)' },
+  { icon: Truck, title: 'Agriculture Loan', titleMl: 'കാർഷിക വായ്പ', desc: 'Lowest interest rates for agricultural development.', descMl: 'കാർഷിക വികസനത്തിന് ഏറ്റവും കുറഞ്ഞ പലിശ.', color: '#1E88E5', bg: 'rgba(30,136,229,0.1)' },
+  { icon: Briefcase, title: 'Personal Loan', titleMl: 'വ്യക്തിഗത വായ്പ', desc: 'Quick personal loans with minimal documentation.', descMl: 'കുറഞ്ഞ രേഖകളോടെ വേഗത്തിൽ വ്യക്തിഗത വായ്പ.', color: '#8E24AA', bg: 'rgba(142,36,170,0.1)' },
+  { icon: Percent, title: 'Fixed Deposits', titleMl: 'സ്ഥിര നിക്ഷേപം', desc: 'Up to 9.5% interest for senior citizens.', descMl: 'മുതിർന്ന പൗരന്മാർക്ക് 9.5% വരെ പലിശ.', color: '#E53935', bg: 'rgba(229,57,53,0.1)' },
+  { icon: ShieldCheck, title: 'Neethi Services', titleMl: 'നീതി സേവനങ്ങൾ', desc: 'Medical store, clinic, and lab for the community.', descMl: 'മെഡിക്കൽ സ്റ്റോർ, ക്ലിനിക്, ലാബ് സൗകര്യങ്ങൾ.', color: '#047038', bg: 'rgba(4,112,56,0.1)' },
+];
+
+export default function HomePageClient({ homepageData, loansData, depositsData, settingsData }: { homepageData: any; loansData?: any[]; depositsData?: any[]; settingsData?: any }) {
+  const { t, language } = useLanguage();
+
+  const topDeposit = depositsData && depositsData.length > 0
     ? [...depositsData].sort((a, b) => parseFloat(b.entry.rate) - parseFloat(a.entry.rate))[0]
     : null;
 
-  const marqueeText = settingsData?.marqueeText || t('Welcome to Nattika Service Cooperative Bank! | New: Interest-less loans available for Paddy Cultivation! | Avail lowest interest rates for Gold Loans today.', 'നാട്ടിക സർവീസ് സഹകരണ ബാങ്കിലേക്ക് സ്വാഗതം! | നെൽകൃഷിക്കായി പലിശരഹിത വായ്പകൾ ലഭ്യമാണ്!');
-
-  // Helper map to restore dynamic icons if you prefer
-  const iconMap: { [key: string]: React.ReactNode } = {
-    'Coins': <Coins className="w-8 h-8 text-yellow-500" />,
-    'Home': <Home className="w-8 h-8 text-[#047038]" />,
-    'Briefcase': <Briefcase className="w-8 h-8 text-[#0A3D91]" />,
-    'Tractor': <Truck className="w-8 h-8 text-blue-600" />,
-    'BadgePercent': <Percent className="w-8 h-8 text-indigo-500" />
-  };
+  const marqueeText = settingsData?.marqueeText || t(
+    'Welcome to Nattika Service Cooperative Bank! | Lowest interest Gold Loans available! | Fixed Deposits up to 9.5% for Senior Citizens!',
+    'നാട്ടിക സർവീസ് സഹകരണ ബാങ്കിലേക്ക് സ്വാഗതം! | ഏറ്റവും കുറഞ്ഞ പലിശയിൽ സ്വർണ്ണ വായ്പ! | മുതിർന്ന പൗരന്മാർക്ക് 9.5% വരെ പലിശ!'
+  );
 
   return (
-    <>
+    <div style={{ background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
       <Navbar />
-      <main className="flex-1 overflow-hidden bg-[#F8FAFC]">
-        {/* FULL-WIDTH IMMERSIVE HERO */}
-        <div className="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden">
-          {homepageData?.heroVideoUrl && (
-            <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0">
-               <source src={homepageData.heroVideoUrl} type="video/mp4" />
-            </video>
-          )}
-          {(!homepageData?.heroVideoUrl && homepageData?.heroImages?.length > 0) && (
-            <div className="absolute inset-0 w-full h-full z-0">
-               <HeroCarousel images={homepageData.heroImages} />
-            </div>
-          )}
-          
-          {/* Layered Gradient Overlay for text readability (matches 1st School styling) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0A3D91]/90 via-[#0A3D91]/50 to-transparent mix-blend-multiply z-10"></div>
-          <div className="absolute inset-0 bg-black/30 z-10"></div>
 
-          <div className="relative z-20 text-center px-4 max-w-4xl mx-auto pt-24">
-            <motion.h1 
-               initial={{ opacity: 0, y: 30 }}
-               animate={{ opacity: 1, y: 0 }}
-               className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 text-white leading-tight"
-            >
-              {t('Empowering Your', 'നിങ്ങളുടെ സാമ്പത്തിക')} <br/>
-              <span className="text-green-400">{t('Financial Future', 'വളർച്ചയ്ക്കായി')}</span>
+      {/* ═══ HERO ═══ */}
+      <section style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+        <PageBackground
+          imageUrl={homepageData?.heroImages?.[0]}
+          videoUrl={homepageData?.heroVideoUrl}
+          overlayOpacity={0.6}
+          blurAmount="2px"
+        />
+        {/* Blob fallbacks */}
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+          <div style={{ position: 'absolute', top: '-15%', right: '-10%', width: 'clamp(300px,50vw,600px)', height: 'clamp(300px,50vw,600px)', background: 'radial-gradient(circle, rgba(10,61,145,0.12) 0%, transparent 65%)', borderRadius: '60% 40% 30% 70%', animation: 'blob 8s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', bottom: '5%', left: '-8%', width: 'clamp(250px,40vw,500px)', height: 'clamp(250px,40vw,500px)', background: 'radial-gradient(circle, rgba(4,112,56,0.1) 0%, transparent 65%)', borderRadius: '30% 60% 70% 40%', animation: 'blob 10s ease-in-out infinite reverse' }} />
+        </div>
+
+        <div className="container section" style={{ position: 'relative', zIndex: 1, width: '100%' }}>
+          <motion.div initial="hidden" animate="show" variants={stagger} className="hero-text-shadow" style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1.25rem,2.5vw,1.75rem)', textAlign: 'center', maxWidth: '800px', margin: '0 auto', color: 'white' }}>
+            {/* Badge */}
+            <motion.div variants={fadeUp}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.375rem 1rem', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', fontSize: 'var(--text-xs)', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                🏦 {t('Trusted Since 1933', '1933 മുതൽ വിശ്വസ്തം')}
+              </span>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.h1 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, lineHeight: 1.1, fontSize: 'clamp(2.5rem, 5vw + 1rem, 5rem)', letterSpacing: '-0.01em' }}>
+              {t('Empowering Your', 'നിങ്ങളുടെ സാമ്പത്തിക')}{' '}
+              <span style={{ color: '#10B981' }}>{t('Financial', 'വളർച്ചയ്ക്കായി')}</span>{' '}
+              <span style={{ color: '#D4AF37' }}>{t('Future', '')}</span>
             </motion.h1>
-            
-            <motion.p 
-               initial={{ opacity: 0, y: 30 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.1 }}
-               className="text-blue-50 text-xl md:text-2xl mb-10 max-w-2xl mx-auto font-medium leading-relaxed drop-shadow-md"
-            >
-              {t('A trusted cooperative bank serving the people of Nattika with comprehensive financial solutions.', 
-                 'നാട്ടികയിലെ ജനങ്ങളുടെ വിശ്വസ്ത സഹകരണ ബാങ്ക്.')}
+
+            <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-lg)', color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, maxWidth: '60ch', margin: '0 auto' }}>
+              {t('A legacy of trust and excellence in cooperative banking, serving the heart of Thrissur with modern financial solutions.',
+                'തൃശൂരിന്റെ ഹൃദയഭാഗത്ത് ആധുനിക സാമ്പത്തിക സേവനങ്ങളുമായി സഹകരണ ബാങ്കിംഗിലെ വിശ്വാസത്തിന്റെയും മികവിന്റെയും പാരമ്പര്യം.')}
             </motion.p>
-            
-            <motion.div 
-               initial={{ opacity: 0, scale: 0.9 }}
-               animate={{ opacity: 1, scale: 1 }}
-               transition={{ delay: 0.2 }}
-               className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 justify-center"
-            >
-              <Link href="/facilities" className="bg-[#047038] hover:bg-green-700 text-white px-8 py-4 rounded-full text-lg font-bold transition-all shadow-xl flex items-center justify-center">
-                {t('Our Facilities', 'സൗകര്യങ്ങൾ')} <ChevronRight className="ml-2 w-5 h-5" />
+
+            {/* CTAs */}
+            <motion.div variants={fadeUp} style={{ display: 'flex', flexWrap: 'wrap', gap: '0.875rem', justifyContent: 'center' }}>
+              <Link href="/facilities" className="btn-rainbow" style={{ fontSize: 'var(--text-sm)', padding: '0.875rem 2rem' }}>
+                {t('Explore Facilities', 'സൗകര്യങ്ങൾ')} <ArrowRight size={16} />
               </Link>
-              <Link href="/contact" className="bg-white hover:bg-gray-50 text-[#0A3D91] px-8 py-4 rounded-full text-lg font-bold transition-all shadow-xl flex items-center justify-center">
-                {t('Contact Us', 'ബന്ധപ്പെടുക')}
+              <Link href="/contact" className="btn-ghost" style={{ fontSize: 'var(--text-sm)', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.25)' }}>
+                {t('Contact Branch', 'ബ്രാഞ്ച് ബന്ധപ്പെടുക')}
               </Link>
             </motion.div>
-          </div>
-        </div>
 
-        {/* Live Ticker Area (Moved below Hero) */}
-        <div className="bg-[#0A3D91] text-white py-3 border-t border-blue-800 overflow-hidden whitespace-nowrap relative flex shadow-md z-30">
-          <motion.div 
-            animate={{ x: [0, -1000] }} 
-            transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
-            className="flex items-center space-x-12 text-sm md:text-base font-medium px-4"
-          >
-            <span className="flex-shrink-0">{marqueeText}</span>
-            <span className="flex-shrink-0">{marqueeText}</span>
+            {/* Stats */}
+            <motion.div variants={fadeUp} style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 'clamp(2rem,8vw,5rem)', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.15)', marginTop: '0.75rem' }}>
+              {STATS.map(s => (
+                <div key={s.label} style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(1.75rem,4vw,2.75rem)', color: s.color, lineHeight: 1 }}>{s.num}</div>
+                  <div style={{ fontSize: 'var(--text-xs)', color: 'rgba(255,255,255,0.85)', marginTop: '0.5rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{language === 'en' ? s.label : s.labelMl}</div>
+                </div>
+              ))}
+            </motion.div>
           </motion.div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          
-          {/* Feature Row / Fast Access Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-40">
+        {/* Floating emojis */}
+        <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }} style={{ position: 'absolute', top: '20%', left: '5%', fontSize: '2.5rem', opacity: 0.5 }}>🏦</motion.div>
+        <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }} style={{ position: 'absolute', bottom: '25%', right: '8%', fontSize: '2.5rem', opacity: 0.5 }}>💰</motion.div>
+      </section>
 
-            {/* LIVE RATES BENTO */}
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-white rounded-3xl p-8 shadow-xl shadow-blue-900/5 border border-gray-100 flex flex-col relative group"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-gray-800 text-lg">{t('Top Interest Rate', 'മികച്ച പലിശ നിരക്ക്')}</h3>
-                <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center">
-                  <Percent className="w-6 h-6 text-[#047038]" />
-                </div>
+      {/* ═══ LIVE TICKER ═══ */}
+      <div style={{ background: 'var(--trust-blue)', padding: '0.75rem 0', overflow: 'hidden', whiteSpace: 'nowrap' as const }}>
+        <motion.div animate={{ x: [0, -1200] }} transition={{ repeat: Infinity, duration: 40, ease: 'linear' }} style={{ display: 'flex', gap: '4rem', fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.9)', fontWeight: 500, paddingLeft: '1rem' }}>
+          <span>{marqueeText}</span>
+          <span>{marqueeText}</span>
+          <span>{marqueeText}</span>
+        </motion.div>
+      </div>
+
+      {/* ═══ SERVICES BENTO ═══ */}
+      <section style={{ background: 'var(--surface)' }} className="section">
+        <div className="container">
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} variants={stagger} style={{ marginBottom: 'clamp(2rem,4vw,3.5rem)', textAlign: 'center' }}>
+            <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
+              {t('Our Banking Solutions', 'ഞങ്ങളുടെ ബാങ്കിംഗ് സേവനങ്ങൾ')}
+            </motion.p>
+            <motion.h2 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)', marginBottom: '1rem' }}>
+              {t('Financial Services for Everyone', 'എല്ലാവർക്കുമായി സാമ്പത്തിക സേവനങ്ങൾ')}
+            </motion.h2>
+          </motion.div>
+
+          <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }} variants={stagger}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))', gap: '1rem' }}>
+            {SERVICES.map(s => {
+              const Icon = s.icon;
+              return (
+                <motion.div key={s.title} variants={fadeUp} className="bento-card" style={{ padding: '1.5rem' }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 'var(--r-md)', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
+                    <Icon size={24} color={s.color} strokeWidth={2} />
+                  </div>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'var(--text-lg)', marginBottom: '0.5rem', color: 'var(--text)' }}>{language === 'en' ? s.title : s.titleMl}</h3>
+                  <p style={{ fontSize: 'var(--text-sm)', lineHeight: 1.65, color: 'var(--text-muted)' }}>{language === 'en' ? s.desc : s.descMl}</p>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }} style={{ textAlign: 'center', marginTop: 'clamp(2rem,4vw,3rem)' }}>
+            <Link href="/facilities" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: 'var(--text-sm)', color: 'var(--accent)', fontWeight: 600 }}>
+              {t('View All Facilities', 'എല്ലാ സൗകര്യങ്ങളും കാണുക')} <ChevronRight size={14} />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ═══ RATES HIGHLIGHT ═══ */}
+      <section className="section">
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(320px, 100%), 1fr))', gap: '1.5rem' }}>
+            {/* Top Rate Card */}
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="bento-card" style={{ padding: 'clamp(1.5rem,3vw,2.5rem)', background: 'var(--trust-blue)', color: 'white', borderColor: 'transparent' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                <Percent size={20} color="#10B981" />
+                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#10B981' }}>{t('Top Interest Rate', 'മികച്ച പലിശ നിരക്ക്')}</span>
               </div>
-              <div className="mt-8">
-                <span className="text-5xl font-extrabold text-[#0A3D91]">{topDeposit ? topDeposit.entry.rate : '8.5%'}</span>
-                <span className="text-gray-500 ml-2 font-bold text-xl">p.a.</span>
-                <p className="text-gray-500 mt-4 font-medium leading-tight">
-                  {topDeposit 
-                   ? t(topDeposit.entry.title + ' (' + topDeposit.entry.duration + ')', topDeposit.entry.title) 
-                   : t('For Senior Citizens (1 Year Fixed Deposit)', 'മുതിർന്ന പൗരന്മാർക്ക്')}
+              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(3rem,6vw,4.5rem)', lineHeight: 1, marginBottom: '0.5rem' }}>
+                {topDeposit ? topDeposit.entry.rate : '9.5%'}
+              </div>
+              <div style={{ fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.7)', marginBottom: '1.5rem' }}>
+                {topDeposit ? `${topDeposit.entry.title} (${topDeposit.entry.duration})` : t('Fixed Deposit — Senior Citizens', 'സ്ഥിര നിക്ഷേപം — മുതിർന്ന പൗരന്മാർ')}
+              </div>
+              <Link href="/facilities" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: 'var(--text-sm)', color: '#10B981', fontWeight: 600 }}>
+                {t('View All Rates', 'എല്ലാ നിരക്കുകളും')} <ChevronRight size={14} />
+              </Link>
+            </motion.div>
+
+            {/* Neethi Card */}
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="bento-card" style={{ padding: 'clamp(1.5rem,3vw,2.5rem)', background: 'var(--green)', color: 'white', borderColor: 'transparent' }}>
+              <ShieldCheck size={32} color="rgba(255,255,255,0.3)" style={{ position: 'absolute', bottom: '1rem', right: '1rem' }} />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', marginBottom: '1rem' }}>{t('Neethi Services', 'നീതി സേവനങ്ങൾ')}</h3>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, marginBottom: '1.5rem' }}>
+                  {t('Medical store, clinic, and lab facilities serving our community with affordable healthcare.', 'മെഡിക്കൽ സ്റ്റോർ, ക്ലിനിക്, ലാബ് — സാമൂഹിക ആരോഗ്യ സേവനം.')}
                 </p>
-              </div>
-            </motion.div>
-
-            {/* QUICK LINK: NEETHI SCHEMES */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="bg-gradient-to-br from-[#047038] to-[#03592c] rounded-3xl p-8 text-white relative shadow-xl shadow-green-900/10 min-h-[300px] flex flex-col group overflow-hidden"
-            >
-               <div className="relative z-10">
-                 <h3 className="font-bold text-2xl mb-4">{t('Neethi Services', 'നീതി സേവനങ്ങൾ')}</h3>
-                 <p className="text-green-50 text-base mb-8 leading-relaxed opacity-90">
-                   {t('Medical store, Clinic, and Lab facilities available for the community.', 'മെഡിക്കൽ സ്റ്റോർ, ക്ലിനിക്, ലാബ് സൗകര്യങ്ങൾ ലഭ്യമാണ്.')}
-                 </p>
-               </div>
-               
-               <ShieldCheck className="w-32 h-32 text-white/10 absolute -bottom-8 -right-8 group-hover:scale-110 transition-transform duration-700" />
-               
-               <Link href="/facilities#subsidiaries" className="mt-auto inline-flex items-center font-bold text-white group/btn">
-                 <span className="mr-2 border-b-2 border-green-400 group-hover/btn:border-white transition-colors">{t('Learn More', 'കൂടുതൽ അറിയാൻ')}</span>
-                 <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-               </Link>
-            </motion.div>
-
-            {/* GOLD LOAN BENTO */}
-            <motion.div 
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ delay: 0.3 }}
-             className="bg-white rounded-3xl p-6 shadow-xl shadow-blue-900/5 border border-gray-100 flex flex-col justify-between group hover:-translate-y-1 transition-all"
-            >
-              <div>
-                <div className="bg-yellow-50 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block uppercase tracking-wider">
-                  {t('Most Popular', 'ജനപ്രിയം')}
-                </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">{t('Instant Gold Loan', 'തൽക്ഷണ സ്വർണ്ണ വായ്പ')}</h3>
-                <p className="text-gray-500 text-sm">{t('Get cash instantly against your gold jewelry with minimal documentation.', 'കുറഞ്ഞ രേഖകൾ നൽകി പെട്ടെന്ന് വായ്പ നേടുക.')}</p>
-              </div>
-              <div className="mt-4 flex justify-end">
-                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <Coins className="w-6 h-6 text-yellow-600" />
-                </div>
+                <Link href="/facilities#subsidiaries" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: 'var(--text-sm)', color: 'white', fontWeight: 600, borderBottom: '2px solid rgba(255,255,255,0.4)' }}>
+                  {t('Learn More', 'കൂടുതൽ അറിയുക')} <ChevronRight size={14} />
+                </Link>
               </div>
             </motion.div>
           </div>
+        </div>
+      </section>
 
-          {/* About Us (EFSC Style Side-by-Side) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-20 bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500"
-          >
-            <div className="flex flex-col md:flex-row">
-               <div className="w-full md:w-5/12 bg-gray-200 relative min-h-[300px]">
-                 {homepageData?.heroImages && homepageData.heroImages.length > 0 ? (
-                    <img src={homepageData.heroImages[0]} alt="Bank Branch" className="absolute inset-0 w-full h-full object-cover" />
-                 ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-blue-50 text-blue-200">
-                      <History className="w-24 h-24" />
-                    </div>
-                 )}
-               </div>
-               <div className="w-full md:w-7/12 p-8 md:p-12 flex flex-col justify-center">
-                 <h2 className="text-sm font-bold text-[#047038] uppercase tracking-wider mb-2">{t('Welcome to', 'സ്വാഗതം')}</h2>
-                 <h3 className="text-3xl font-extrabold text-[#0A3D91] mb-4">Nattika Service Cooperative Bank</h3>
-                 <p className="text-gray-600 mb-6 leading-relaxed">
-                   {t('Since our inception, we have been dedicated to meeting the growing financial needs of our community by introducing innovative policies, schemes, and loan plans aimed particularly at helping the common man and fostering local development.', 'ഞങ്ങളുടെ ആരംഭം മുതൽ, നാടിന്റെയും നാട്ടുകാരുടെയും സാമ്പത്തിക വളർച്ചയ്ക്കും ഉന്നമനത്തിനുമായി ഞങ്ങൾ പ്രവർത്തിക്കുന്നു.')}
-                 </p>
-                 <Link href="/about" className="inline-flex items-center font-bold text-[#0A3D91] hover:text-[#047038] transition-colors w-max">
-                   {t('Read Our Story', 'കൂടുതൽ അറിയുക')} <ChevronRight className="ml-1 w-4 h-4" />
-                 </Link>
-               </div>
+      {/* ═══ ABOUT PREVIEW ═══ */}
+      <section style={{ background: 'var(--surface)' }} className="section">
+        <div className="container">
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(400px, 100%), 1fr))', gap: '3rem', alignItems: 'center' }}>
+            <div style={{ position: 'relative' }}>
+              <div style={{ position: 'absolute', top: '-8px', left: '-8px', width: '4rem', height: '4rem', background: 'var(--accent-bg)', borderRadius: 'var(--r-lg)', zIndex: 0 }} />
+              <img
+                src={homepageData?.heroImages?.[0] || '/images/about/heroImage.webp'}
+                alt="Nattika Bank"
+                style={{ borderRadius: 'var(--r-xl)', width: '100%', height: 'auto', objectFit: 'cover', position: 'relative', zIndex: 1, boxShadow: 'var(--shadow-lg)' }}
+              />
             </div>
-          </motion.div>
-
-          {/* Core Services Grid */}
-          <div className="mt-16">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800">{t('Our Premium Services', 'ഞങ്ങളുടെ സേവനങ്ങൾ')}</h2>
-              <Link href="/facilities" className="hidden sm:flex text-[#0A3D91] font-semibold items-center hover:underline">
-                {t('View All', 'എല്ലാം കാണുക')} <ChevronRight className="w-4 h-4 ml-1" />
+            <div>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{t('Our Story', 'ഞങ്ങളുടെ കഥ')}</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)', marginBottom: '1rem' }}>
+                {t('Serving Nattika for 90+ Years', '90+ വർഷമായി നാട്ടികയെ സേവിക്കുന്നു')}
+              </h2>
+              <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1.5rem' }}>
+                {t('Founded in 1933, we are more than a bank — we are a partner in our community\'s prosperity, offering modern financial services with a human touch.',
+                  '1933-ൽ സ്ഥാപിതമായ ഞങ്ങൾ ഒരു ബാങ്കിനേക്കാൾ ഉപരിയാണ് — ഞങ്ങൾ സമൂഹത്തിന്റെ പുരോഗതിയിലെ പങ്കാളിയാണ്.')}
+              </p>
+              <Link href="/about" className="btn-primary" style={{ fontSize: 'var(--text-sm)' }}>
+                {t('Read Our Story', 'കൂടുതൽ അറിയുക')} <ChevronRight size={14} />
               </Link>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {loansData && loansData.slice(0, 4).map((loan: any, idx: number) => {
-                const IconComponent = loan.entry.icon && iconMap[loan.entry.icon] ? iconMap[loan.entry.icon] : <Percent className="w-8 h-8 text-gray-500" />;
-                const hasBgImage = !!loan.entry.backgroundImage;
-
-                return (
-                  <motion.div
-                    key={loan.slug}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    whileHover={{ y: -5 }}
-                    className={`relative p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-lg transition-all group overflow-hidden ${hasBgImage ? 'text-white min-h-[220px] flex flex-col justify-end' : 'bg-white'}`}
-                  >
-                    {hasBgImage && (
-                      <>
-                        <img src={loan.entry.backgroundImage} alt={loan.entry.title} className="absolute inset-0 w-full h-full object-cover z-0 group-hover:scale-105 transition-transform duration-500" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10 z-0"></div>
-                      </>
-                    )}
-                    
-                    <div className="relative z-10">
-                      {!hasBgImage && (
-                        <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-50 transition-colors">
-                          {IconComponent}
-                        </div>
-                      )}
-                      <h3 className={`text-xl font-bold mb-2 ${hasBgImage ? 'text-white' : 'text-gray-800'}`}>
-                        {t(loan.entry.title, loan.entry.title)}
-                      </h3>
-                      <p className={`text-sm ${hasBgImage ? 'text-gray-200' : 'text-gray-500'}`}>
-                        {t(loan.entry.description, loan.entry.description)}
-                      </p>
-                      
-                      <div className="mt-4 flex items-center justify-between">
-                         <span className={`text-sm font-bold ${hasBgImage ? 'text-yellow-400' : 'text-[#047038]'}`}>
-                           {loan.entry.rate} {t('Interest', 'പലിശ')}
-                         </span>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-          
+          </motion.div>
         </div>
-      </main>
+      </section>
+
+      {/* ═══ CTA BANNER ═══ */}
+      <section style={{ background: 'var(--rainbow)', padding: 'clamp(3rem,6vw,5rem) 0' }}>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(1.75rem,3.5vw,2.5rem)', color: 'white', marginBottom: '1rem' }}>
+              {t('Start Your Banking Journey Today', 'ഇന്ന് തന്നെ നിങ്ങളുടെ ബാങ്കിംഗ് ആരംഭിക്കൂ')}
+            </h2>
+            <p style={{ fontSize: 'var(--text-base)', color: 'rgba(255,255,255,0.85)', marginBottom: '2rem', maxWidth: '50ch', margin: '0 auto 2rem' }}>
+              {t('Visit your nearest branch or contact us to explore our competitive rates and community-first banking solutions.',
+                'ഞങ്ങളുടെ മത്സരക്ഷമമായ നിരക്കുകളും സമൂഹ-കേന്ദ്രിത ബാങ്കിംഗ് പരിഹാരങ്ങളും അറിയാൻ ബ്രാഞ്ചിൽ സന്ദർശിക്കുക.')}
+            </p>
+            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.875rem 2rem', background: 'white', color: '#0A3D91', borderRadius: 'var(--r-full)', fontWeight: 700, fontSize: 'var(--text-sm)', boxShadow: '0 4px 16px rgba(0,0,0,0.15)' }}>
+              {t('Contact Us', 'ബന്ധപ്പെടുക')} <ArrowRight size={16} />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
       <Footer />
-    </>
+    </div>
   );
 }

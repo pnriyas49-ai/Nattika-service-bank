@@ -1,205 +1,120 @@
 'use client';
-
-import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/LanguageContext';
-import { Building2, ChevronRight, Store } from 'lucide-react';
+import { Store, ChevronRight } from 'lucide-react';
+import PageBackground from './ui/PageBackground';
 
-interface FacilitySection {
-  title: string;
-  titleMl: string;
-  columns: string[];
-  rows: string[][];
-}
+const fadeUp = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 30, stiffness: 200 } } };
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
 
-interface Subsidiary {
-  title: string;
-  titleMl: string;
-  description: string;
-  image: string;
-}
-
-interface FacilitiesData {
-  heroImage: string;
-  sections: FacilitySection[];
-  subsidiaries: Subsidiary[];
-}
+interface FacilitySection { title: string; titleMl: string; columns: string[]; rows: string[][]; }
+interface Subsidiary { title: string; titleMl: string; description: string; image: string; }
+interface FacilitiesData { heroImage: string; sections: FacilitySection[]; subsidiaries: Subsidiary[]; }
 
 export default function FacilitiesClient({ data }: { data: FacilitiesData }) {
-  const { t } = useLanguage();
-
+  const { t, language } = useLanguage();
   if (!data) return null;
 
   return (
-    <div className="pb-24 pt-20">
-      {/* ── HERO ──────────────────────────────────────────────────── */}
-      <section className="relative w-full min-h-[40vh] flex items-center justify-center overflow-hidden">
-        {data.heroImage ? (
-          <img
-            src={data.heroImage}
-            alt="Facilities"
-            className="absolute inset-0 w-full h-full object-cover z-0"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0A3D91] to-[#047038] z-0" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A3D91]/90 via-[#0A3D91]/50 to-transparent mix-blend-multiply z-10" />
-        <div className="absolute inset-0 bg-black/25 z-10" />
-
-        <div className="relative z-20 text-center px-4 max-w-4xl mx-auto py-20">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-green-400 font-bold uppercase tracking-[0.2em] text-sm mb-3"
-          >
-            {t('Nattika Service Cooperative Bank', 'നാട്ടിക സർവീസ് സഹകരണ ബാങ്ക്')}
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
-            className="text-4xl md:text-6xl font-extrabold text-white mb-4 drop-shadow-lg"
-          >
-            {t('Facilities', 'സൗകര്യങ്ങൾ')}
-          </motion.h1>
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: '80px' }}
-            className="h-1.5 bg-green-500 mx-auto rounded-full"
-          />
+    <div style={{ background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
+      {/* ═══ HERO ═══ */}
+      <section style={{ minHeight: '50vh', display: 'flex', alignItems: 'center', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
+        <PageBackground imageUrl={data.heroImage} overlayOpacity={0.7} blurAmount="3px" />
+        <div className="container section" style={{ position: 'relative', zIndex: 1 }}>
+          <motion.div initial="hidden" animate="show" variants={stagger} className="hero-text-shadow" style={{ textAlign: 'center', color: 'white', maxWidth: '700px', margin: '0 auto' }}>
+            <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+              🏢 {t('Bank Services', 'ബാങ്ക് സേവനങ്ങൾ')}
+            </motion.p>
+            <motion.h1 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(2.5rem, 5vw + 1rem, 4.5rem)', lineHeight: 1.1 }}>
+              {t('Our Facilities', 'സൗകര്യങ്ങൾ')}
+            </motion.h1>
+          </motion.div>
         </div>
       </section>
 
-      {/* ── QUICK NAV PILLS ───────────────────────────────────────── */}
-      <div className="bg-white border-b border-gray-100 sticky top-[68px] z-30 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap gap-2">
-          {data.sections?.map((section, idx) => (
-            <a
-              key={idx}
-              href={`#section-${idx}`}
-              className="px-4 py-2 text-sm font-semibold rounded-full bg-gray-100 hover:bg-[#0A3D91] hover:text-white text-gray-700 transition-all"
-            >
-              {t(section.title, section.titleMl)}
+      {/* ═══ QUICK NAV ═══ */}
+      <div style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)', position: 'sticky', top: '72px', zIndex: 50 }}>
+        <div className="container" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', padding: '0.75rem clamp(1rem,4vw,2rem)' }}>
+          {data.sections?.map((s, i) => (
+            <a key={i} href={`#section-${i}`} style={{ padding: '0.5rem 1rem', borderRadius: 'var(--r-full)', fontSize: 'var(--text-xs)', fontWeight: 600, background: 'var(--surface-2)', color: 'var(--text-muted)', border: '1px solid var(--border)', transition: 'all 0.2s', textDecoration: 'none' }}>
+              {t(s.title, s.titleMl)}
             </a>
           ))}
           {data.subsidiaries?.length > 0 && (
-            <a
-              href="#subsidiaries"
-              className="px-4 py-2 text-sm font-semibold rounded-full bg-gray-100 hover:bg-[#047038] hover:text-white text-gray-700 transition-all"
-            >
+            <a href="#subsidiaries" style={{ padding: '0.5rem 1rem', borderRadius: 'var(--r-full)', fontSize: 'var(--text-xs)', fontWeight: 600, background: 'rgba(4,112,56,0.08)', color: 'var(--green)', border: '1px solid rgba(4,112,56,0.2)', transition: 'all 0.2s', textDecoration: 'none' }}>
               {t('Subsidiary Firms', 'അനുബന്ധ സ്ഥാപനങ്ങൾ')}
             </a>
           )}
         </div>
       </div>
 
-      {/* ── TABLE SECTIONS ─────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* ═══ TABLES ═══ */}
+      <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
         {data.sections?.map((section, sIdx) => (
-          <motion.section
-            key={sIdx}
-            id={`section-${sIdx}`}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-16 scroll-mt-36"
-          >
-            {/* Section heading */}
-            <div className="flex items-center mb-6">
-              <div className="w-1.5 h-8 bg-[#047038] rounded-full mr-3" />
-              <h2 className="text-2xl md:text-3xl font-extrabold text-[#0A3D91] uppercase tracking-wide">
+          <motion.section key={sIdx} id={`section-${sIdx}`} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            style={{ marginBottom: '3rem', scrollMarginTop: '140px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              <div style={{ width: '4px', height: '2rem', background: 'var(--green)', borderRadius: '4px' }} />
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-xl)', color: 'var(--trust-blue)' }}>
                 {t(section.title, section.titleMl)}
               </h2>
             </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-sm bg-white">
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="bg-[#0A3D91]">
-                    {section.columns.map((col, cIdx) => (
-                      <th
-                        key={cIdx}
-                        className="px-6 py-4 text-sm font-bold text-white uppercase tracking-wider whitespace-nowrap"
-                      >
-                        {col}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {section.rows.map((row, rIdx) => (
-                    <tr
-                      key={rIdx}
-                      className={`border-b border-gray-100 transition-colors hover:bg-blue-50/40 ${
-                        rIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'
-                      }`}
-                    >
-                      {row.map((cell, cellIdx) => (
-                        <td
-                          key={cellIdx}
-                          className={`px-6 py-4 text-sm ${
-                            cellIdx === 0
-                              ? 'font-semibold text-gray-800'
-                              : 'font-bold text-gray-700'
-                          }`}
-                        >
-                          {cell}
-                        </td>
+            <div className="bento-card" style={{ overflow: 'hidden' }}>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                  <thead>
+                    <tr style={{ background: 'var(--trust-blue)' }}>
+                      {section.columns.map((col, cIdx) => (
+                        <th key={cIdx} style={{ padding: '1rem 1.5rem', fontSize: 'var(--text-xs)', fontWeight: 700, color: 'white', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+                          {col}
+                        </th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {section.rows.map((row, rIdx) => (
+                      <tr key={rIdx} style={{ borderBottom: '1px solid var(--border)', background: rIdx % 2 === 0 ? 'var(--surface)' : 'var(--surface-2)', transition: 'background 0.2s' }}>
+                        {row.map((cell, cellIdx) => (
+                          <td key={cellIdx} style={{ padding: '1rem 1.5rem', fontSize: 'var(--text-sm)', fontWeight: cellIdx === 0 ? 600 : 500, color: cellIdx === 0 ? 'var(--text)' : 'var(--text-muted)' }}>
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </motion.section>
         ))}
 
-        {/* ── SUBSIDIARY FIRMS ───────────────────────────────────────── */}
+        {/* ═══ SUBSIDIARIES ═══ */}
         {data.subsidiaries?.length > 0 && (
-          <motion.section
-            id="subsidiaries"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-20 scroll-mt-36"
-          >
-            <div className="flex items-center mb-8">
-              <div className="w-1.5 h-8 bg-[#047038] rounded-full mr-3" />
-              <h2 className="text-2xl md:text-3xl font-extrabold text-[#047038] uppercase tracking-wide">
-                {t('Subsidiary Firms', 'അനുബന്ധ സ്ഥാപനങ്ങൾ')}
-              </h2>
+          <motion.section id="subsidiaries" initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            style={{ marginTop: '4rem', scrollMarginTop: '140px' }}>
+            <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem,4vw,3rem)' }}>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{t('Community Services', 'സാമൂഹിക സേവനങ്ങൾ')}</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)' }}>{t('Subsidiary Firms', 'അനുബന്ധ സ്ഥാപനങ്ങൾ')}</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))', gap: '1.25rem' }}>
               {data.subsidiaries.map((sub, idx) => (
-                <motion.div
-                  key={idx}
-                  whileHover={{ y: -6 }}
-                  className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all group"
-                >
-                  {/* Image / placeholder */}
-                  <div className="relative h-56 bg-gradient-to-br from-blue-50 to-green-50 overflow-hidden">
+                <motion.div key={idx} variants={fadeUp} className="bento-card" style={{ overflow: 'hidden' }}>
+                  <div style={{ height: '200px', background: 'var(--surface-2)', overflow: 'hidden' }}>
                     {sub.image ? (
-                      <img
-                        src={sub.image}
-                        alt={sub.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
+                      <img src={sub.image} alt={sub.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Store className="w-16 h-16 text-gray-200" />
+                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Store size={48} color="var(--text-faint)" />
                       </div>
                     )}
                   </div>
-
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  <div style={{ padding: '1.5rem' }}>
+                    <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'var(--text-lg)', color: 'var(--text)', marginBottom: '0.5rem' }}>
                       {t(sub.title, sub.titleMl)}
                     </h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">
-                      {sub.description}
-                    </p>
+                    <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-muted)', lineHeight: 1.7 }}>{sub.description}</p>
                   </div>
                 </motion.div>
               ))}
@@ -207,6 +122,7 @@ export default function FacilitiesClient({ data }: { data: FacilitiesData }) {
           </motion.section>
         )}
       </div>
+
     </div>
   );
 }
