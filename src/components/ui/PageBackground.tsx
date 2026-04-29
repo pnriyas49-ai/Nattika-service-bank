@@ -1,9 +1,10 @@
 'use client';
-import { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'framer-motion';
 
 interface PageBackgroundProps {
   imageUrl?: string;
+  imageUrls?: string[]; // Support array of images for carousel
   videoUrl?: string;
   overlayOpacity?: number;
   blurAmount?: string;
@@ -11,6 +12,7 @@ interface PageBackgroundProps {
 
 export default function PageBackground({
   imageUrl,
+  imageUrls = [],
   videoUrl,
   overlayOpacity = 0.5,
   blurAmount = '4px',
@@ -19,6 +21,20 @@ export default function PageBackground({
   const mouseY = useMotionValue(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
+
+  // Handle Carousel State
+  const validImages = imageUrls.length > 0 ? imageUrls : (imageUrl ? [imageUrl] : []);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (validImages.length <= 1 || videoUrl) return;
+    
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % validImages.length);
+    }, 5000); // 5 seconds per slide
+    
+    return () => clearInterval(interval);
+  }, [validImages.length, videoUrl]);
 
   // Smooth vertical parallax based on scroll
   const yScroll = useTransform(scrollY, [0, 1000], ['0%', '20%']);
@@ -44,7 +60,7 @@ export default function PageBackground({
     mouseY.set(0);
   }
 
-  if (!imageUrl && !videoUrl) return null;
+  if (validImages.length === 0 && !videoUrl) return null;
 
   return (
     <div
@@ -77,11 +93,18 @@ export default function PageBackground({
             <source src={videoUrl} type="video/mp4" />
           </video>
         ) : (
-          <img
-            src={imageUrl}
-            alt="Page background"
-            className="w-full h-full object-cover"
-          />
+          <AnimatePresence mode="popLayout">
+            <motion.img
+              key={currentIndex}
+              src={validImages[currentIndex]}
+              alt="Page background"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </AnimatePresence>
         )}
       </motion.div>
 

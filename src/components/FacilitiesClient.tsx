@@ -22,9 +22,7 @@ export default function FacilitiesClient({ data }: { data: FacilitiesData }) {
         <PageBackground imageUrl={data.heroImage} overlayOpacity={0.7} blurAmount="3px" />
         <div className="container section" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div initial="hidden" animate="show" variants={stagger} className="hero-text-shadow" style={{ textAlign: 'center', color: 'white', maxWidth: '700px', margin: '0 auto' }}>
-            <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-              🏢 {t('Bank Services', 'ബാങ്ക് സേവനങ്ങൾ')}
-            </motion.p>
+
             <motion.h1 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(2.5rem, 5vw + 1rem, 4.5rem)', lineHeight: 1.1 }}>
               {t('Our Facilities', 'സൗകര്യങ്ങൾ')}
             </motion.h1>

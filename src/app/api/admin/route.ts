@@ -36,6 +36,17 @@ async function ghSha(filePath: string): Promise<string | null> {
   return (await res.json()).sha ?? null;
 }
 
+async function ghRead(filePath: string): Promise<any | null> {
+  const res = await ghFetch(filePath, undefined, true);
+  if (!res.ok) return null;
+  const data = await res.json();
+  if (data.content && data.encoding === 'base64') {
+     const decoded = atob(data.content);
+     return JSON.parse(decoded);
+  }
+  return null;
+}
+
 async function ghWrite(filePath: string, content: string, message: string) {
   const sha = await ghSha(filePath);
   const body: Record<string, unknown> = { message, content, branch: BRANCH };
@@ -56,11 +67,11 @@ async function ghDelete(filePath: string, message: string) {
   });
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`GitHub delete failed (${filePath}): ${err}`);
+    console.error(`[GitHub Delete Error] Failed to delete ${filePath}:`, err);
   }
 }
 
-// ── Edge-compatible base64 helpers (no Buffer needed) ─────────────────
+// ── Edge-compatible base64 helpers ────────────────────────────────────
 function utf8ToBase64(str: string): string {
   const encoder = new TextEncoder();
   const bytes = encoder.encode(str);
@@ -69,6 +80,24 @@ function utf8ToBase64(str: string): string {
     binary += String.fromCharCode(bytes[i]);
   }
   return btoa(binary);
+}
+
+// ── Media Extract Helpers ─────────────────────────────────────────────
+function extractImageUrls(obj: any): string[] {
+  let urls: string[] = [];
+  if (!obj) return urls;
+  if (typeof obj === 'string') {
+    if (obj.startsWith('/images/')) urls.push(obj);
+  } else if (Array.isArray(obj)) {
+    for (const item of obj) {
+      urls = urls.concat(extractImageUrls(item));
+    }
+  } else if (typeof obj === 'object') {
+    for (const key in obj) {
+      urls = urls.concat(extractImageUrls(obj[key]));
+    }
+  }
+  return urls;
 }
 
 // ── Process uploaded base64 images ────────────────────────────────────
@@ -114,9 +143,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing model or action' }, { status: 400 });
     }
 
+    const filePath = type === 'collection' ? `src/content/${model}/${slug}.json` : `src/content/${model}.json`;
+
     // ── DELETE ─────────────────────────────────────────────────────────
     if (action === 'delete') {
-      const filePath = `src/content/${model}/${slug}.json`;
+      const oldData = await ghRead(filePath);
+      if (oldData) {
+         // Prune associated media
+         const oldImages = extractImageUrls(oldData);
+         for (const imgUrl of oldImages) {
+            await ghDelete(`public${imgUrl}`, `Prune orphaned media from ${model} ${slug}`);
+         }
+      }
+      
+      // Delete the JSON entry
       await ghDelete(filePath, `Delete ${model} ${slug}`);
       return NextResponse.json({ success: true });
     }
@@ -124,7 +164,7 @@ export async function POST(req: NextRequest) {
     // ── SAVE ──────────────────────────────────────────────────────────
     const processedData = { ...data };
 
-    // Upload any base64 images
+    // Upload any new base64 images
     for (const [key, value] of Object.entries(processedData)) {
       if (typeof value === 'string' && value.startsWith('data:image')) {
         processedData[key] = await processBase64Field(value, key, model, slug);
@@ -141,16 +181,19 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Compute the JSON file path
-    let filePath: string;
-    if (type === 'collection') {
-      if (!slug) return NextResponse.json({ error: 'Missing slug for collection' }, { status: 400 });
-      filePath = `src/content/${model}/${slug}.json`;
-    } else {
-      filePath = `src/content/${model}.json`;
+    // Prune orphaned media (images that were in old data but are not in the new data)
+    const oldData = await ghRead(filePath);
+    if (oldData) {
+       const oldImages = extractImageUrls(oldData);
+       const newImages = extractImageUrls(processedData);
+       
+       const orphanedImages = oldImages.filter(img => !newImages.includes(img));
+       for (const imgUrl of orphanedImages) {
+          await ghDelete(`public${imgUrl}`, `Prune orphaned media after update to ${model} ${slug || 'singleton'}`);
+       }
     }
 
-    // Write to GitHub
+    // Write the new JSON to GitHub
     const content = utf8ToBase64(JSON.stringify(processedData, null, 2));
     await ghWrite(filePath, content, `Update ${model} ${slug || 'index'}`);
 

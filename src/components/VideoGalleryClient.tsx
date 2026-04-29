@@ -10,7 +10,7 @@ import Footer from './Footer';
 const fadeUp = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 30, stiffness: 200 } } };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
 
-export default function VideoGalleryClient({ videos }: { videos: any[] }) {
+export default function VideoGalleryClient({ videos, heroImage }: { videos: any[], heroImage?: string }) {
   const { t } = useLanguage();
 
   return (
@@ -19,7 +19,7 @@ export default function VideoGalleryClient({ videos }: { videos: any[] }) {
 
       {/* ═══ HERO ═══ */}
       <section style={{ minHeight: '40vh', display: 'flex', alignItems: 'center', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
-        <PageBackground imageUrl="/images/about/heroImage.webp" overlayOpacity={0.8} blurAmount="4px" />
+        <PageBackground imageUrl={heroImage || "/images/about/heroImage.webp"} overlayOpacity={0.8} blurAmount="4px" />
         <div className="container section" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div initial="hidden" animate="show" variants={stagger} className="hero-text-shadow" style={{ textAlign: 'center', color: 'white', maxWidth: '700px', margin: '0 auto' }}>
             <motion.div variants={fadeUp} style={{ marginBottom: '1rem' }}>

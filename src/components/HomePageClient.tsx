@@ -13,8 +13,8 @@ const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
 
 const STATS = [
   { num: '90+', label: 'Years of Trust', labelMl: 'വർഷത്തെ വിശ്വാസം', color: '#D4AF37' },
-  { num: '25K+', label: 'Members', labelMl: 'അംഗങ്ങൾ', color: '#10B981' },
-  { num: '₹550Cr', label: 'Working Capital', labelMl: 'പ്രവർത്തന മൂലധനം', color: '#0EA5E9' },
+  { num: '25K+', label: 'Members', labelMl: 'അംഗങ്ങൾ', color: 'var(--green)' },
+  { num: '₹550Cr', label: 'Working Capital', labelMl: 'പ്രവർത്തന മൂലധനം', color: 'var(--accent)' },
 ];
 
 const SERVICES = [
@@ -45,7 +45,7 @@ export default function HomePageClient({ homepageData, loansData, depositsData, 
       {/* ═══ HERO ═══ */}
       <section style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
         <PageBackground
-          imageUrl={homepageData?.heroImages?.[0]}
+          imageUrls={homepageData?.heroImages || []}
           videoUrl={homepageData?.heroVideoUrl}
           overlayOpacity={0.6}
           blurAmount="2px"
@@ -59,17 +59,13 @@ export default function HomePageClient({ homepageData, loansData, depositsData, 
         <div className="container section" style={{ position: 'relative', zIndex: 1, width: '100%' }}>
           <motion.div initial="hidden" animate="show" variants={stagger} className="hero-text-shadow" style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1.25rem,2.5vw,1.75rem)', textAlign: 'center', maxWidth: '800px', margin: '0 auto', color: 'white' }}>
             {/* Badge */}
-            <motion.div variants={fadeUp}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.375rem 1rem', borderRadius: 'var(--r-full)', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', fontSize: 'var(--text-xs)', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                🏦 {t('Trusted Since 1933', '1933 മുതൽ വിശ്വസ്തം')}
-              </span>
-            </motion.div>
+
 
             {/* Headline */}
-            <motion.h1 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, lineHeight: 1.1, fontSize: 'clamp(2.5rem, 5vw + 1rem, 5rem)', letterSpacing: '-0.01em' }}>
+            <motion.h1 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, lineHeight: 1.1, fontSize: 'clamp(2.5rem, 5vw + 1rem, 5rem)', letterSpacing: '-0.02em' }}>
               {t('Empowering Your', 'നിങ്ങളുടെ സാമ്പത്തിക')}{' '}
-              <span style={{ color: '#10B981' }}>{t('Financial', 'വളർച്ചയ്ക്കായി')}</span>{' '}
-              <span style={{ color: '#D4AF37' }}>{t('Future', '')}</span>
+              <span>{t('Financial', 'വളർച്ചയ്ക്കായി')}</span>{' '}
+              <span>{t('Future', '')}</span>
             </motion.h1>
 
             <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-lg)', color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, maxWidth: '60ch', margin: '0 auto' }}>
@@ -100,8 +96,7 @@ export default function HomePageClient({ homepageData, loansData, depositsData, 
         </div>
 
         {/* Floating emojis */}
-        <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }} style={{ position: 'absolute', top: '20%', left: '5%', fontSize: '2.5rem', opacity: 0.5 }}>🏦</motion.div>
-        <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }} style={{ position: 'absolute', bottom: '25%', right: '8%', fontSize: '2.5rem', opacity: 0.5 }}>💰</motion.div>
+
       </section>
 
       {/* ═══ LIVE TICKER ═══ */}
@@ -156,8 +151,8 @@ export default function HomePageClient({ homepageData, loansData, depositsData, 
             {/* Top Rate Card */}
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="bento-card" style={{ padding: 'clamp(1.5rem,3vw,2.5rem)', background: 'var(--trust-blue)', color: 'white', borderColor: 'transparent' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                <Percent size={20} color="#10B981" />
-                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#10B981' }}>{t('Top Interest Rate', 'മികച്ച പലിശ നിരക്ക്')}</span>
+                <Percent size={20} color="var(--green)" />
+                <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--green)' }}>{t('Top Interest Rate', 'മികച്ച പലിശ നിരക്ക്')}</span>
               </div>
               <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(3rem,6vw,4.5rem)', lineHeight: 1, marginBottom: '0.5rem' }}>
                 {topDeposit ? topDeposit.entry.rate : '9.5%'}
@@ -165,7 +160,7 @@ export default function HomePageClient({ homepageData, loansData, depositsData, 
               <div style={{ fontSize: 'var(--text-sm)', color: 'rgba(255,255,255,0.7)', marginBottom: '1.5rem' }}>
                 {topDeposit ? `${topDeposit.entry.title} (${topDeposit.entry.duration})` : t('Fixed Deposit — Senior Citizens', 'സ്ഥിര നിക്ഷേപം — മുതിർന്ന പൗരന്മാർ')}
               </div>
-              <Link href="/facilities" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: 'var(--text-sm)', color: '#10B981', fontWeight: 600 }}>
+              <Link href="/facilities" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', fontSize: 'var(--text-sm)', color: 'var(--green)', fontWeight: 600 }}>
                 {t('View All Rates', 'എല്ലാ നിരക്കുകളും')} <ChevronRight size={14} />
               </Link>
             </motion.div>

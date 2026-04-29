@@ -9,7 +9,7 @@ import Footer from './Footer';
 const fadeUp = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 30, stiffness: 200 } } };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
 
-export default function NewsClient({ newsItems }: { newsItems: any[] }) {
+export default function NewsClient({ newsItems, heroImage }: { newsItems: any[], heroImage?: string }) {
   const { t, language } = useLanguage();
 
   return (
@@ -18,12 +18,10 @@ export default function NewsClient({ newsItems }: { newsItems: any[] }) {
 
       {/* ═══ HERO ═══ */}
       <section style={{ minHeight: '40vh', display: 'flex', alignItems: 'center', paddingTop: '72px', position: 'relative', overflow: 'hidden' }}>
-        <PageBackground imageUrl="/images/about/heroImage.webp" overlayOpacity={0.75} blurAmount="3px" />
+        <PageBackground imageUrl={heroImage || "/images/about/heroImage.webp"} overlayOpacity={0.75} blurAmount="3px" />
         <div className="container section" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div initial="hidden" animate="show" variants={stagger} className="hero-text-shadow" style={{ textAlign: 'center', color: 'white', maxWidth: '700px', margin: '0 auto' }}>
-            <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-              📰 {t('Updates', 'അപ്ഡേറ്റുകൾ')}
-            </motion.p>
+
             <motion.h1 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(2.5rem, 5vw + 1rem, 4.5rem)', lineHeight: 1.1 }}>
               {t('News & Announcements', 'വാർത്തകളും അറിയിപ്പുകളും')}
             </motion.h1>

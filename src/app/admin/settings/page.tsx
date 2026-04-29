@@ -12,6 +12,8 @@ export default async function SettingsAdmin() {
         type="singleton"
         initialData={data}
         fields={[
+          { name: 'heroImage_news', label: 'News Page Hero Image', type: 'image' },
+          { name: 'heroImage_gallery', label: 'Gallery Page Hero Image', type: 'image' },
           { name: 'marqueeText', label: 'Live Ticker / Marquee Text', type: 'text' },
           { name: 'workingHours', label: 'Working Hours', type: 'text' },
           { name: 'phoneNumber', label: 'Primary Phone Number', type: 'text' },

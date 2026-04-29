@@ -51,9 +51,7 @@ export default function ContactPage() {
         <PageBackground imageUrl={heroImage} overlayOpacity={0.75} blurAmount="3px" />
         <div className="container section" style={{ position: 'relative', zIndex: 1 }}>
           <motion.div initial="hidden" animate="show" variants={stagger} className="hero-text-shadow" style={{ textAlign: 'center', color: 'white', maxWidth: '700px', margin: '0 auto' }}>
-            <motion.p variants={fadeUp} style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-              📍 {t('Get in Touch', 'ബന്ധപ്പെടുക')}
-            </motion.p>
+
             <motion.h1 variants={fadeUp} style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(2.5rem, 5vw + 1rem, 4.5rem)', lineHeight: 1.1 }}>
               {t('Contact & Branches', 'ബന്ധപ്പെടുക & ശാഖകൾ')}
             </motion.h1>
