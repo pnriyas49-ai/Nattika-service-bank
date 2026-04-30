@@ -2,15 +2,22 @@
   "heroTitle": "Our Legacy",
   "heroSubtitle": "Nattika Service Cooperative Bank",
   "heroImage": "/images/about/upload-heroImage-1777501292784.webp",
+  "heroImage": "/images/about/about-heroImage-1777552071741.webp",
+  "history": "Established in 1933, Nattika Service Cooperative Bank has been a cornerstone of growth for the Nattika community for over 90 years. What started as a small local credit society has evolved into a premier cooperative banking institution, dedicated to empowering the common man through innovative financial solutions and a commitment to social responsibility. From supporting local agriculture to providing modern retail banking services, our journey has always been about growing together with our people.",
+  "mission": "To provide secure, accessible, and high-quality financial services to every member of our community, fostering local development and economic empowerment through cooperation and trust.",
+  "vision": "To be the most trusted and technologically advanced cooperative bank in the region, known for our integrity, member-centric approach, and contribution to the socio-economic prosperity of Nattika.",
   "stats": {
     "deposits": "₹480+ Cr",
     "loans": "₹350+ Cr",
     "capital": "₹550+ Cr",
     "members": "25,000+"
   },
-  "history": "Established in 1933, Nattika Service Cooperative Bank has been a cornerstone of growth for the Nattika community for over 90 years. What started as a small local credit society has evolved into a premier cooperative banking institution, dedicated to empowering the common man through innovative financial solutions and a commitment to social responsibility. From supporting local agriculture to providing modern retail banking services, our journey has always been about growing together with our people.",
-  "mission": "To provide secure, accessible, and high-quality financial services to every member of our community, fostering local development and economic empowerment through cooperation and trust.",
-  "vision": "To be the most trusted and technologically advanced cooperative bank in the region, known for our integrity, member-centric approach, and contribution to the socio-economic prosperity of Nattika.",
-  "board": [],
-  "staff": []
+  "team": [
+    {
+      "name": "",
+      "post": "",
+      "image": "",
+      "number": ""
+    }
+  ]
 }

@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/LanguageContext';
-import { ShieldCheck, Target, TrendingUp, Users, PiggyBank, HandCoins, UserCircle } from 'lucide-react';
+import { ShieldCheck, Target, TrendingUp, Users, PiggyBank, HandCoins, UserCircle, Phone } from 'lucide-react';
 import PageBackground from './ui/PageBackground';
 
 const fadeUp = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 30, stiffness: 200 } } };
@@ -107,48 +107,35 @@ export default function AboutClient({ aboutData }: { aboutData: any }) {
         </div>
       </section>
 
-      {/* ═══ BOARD ═══ */}
-      {aboutData.board?.length > 0 && (
-        <section className="section">
+      {/* ═══ TEAM ═══ */}
+      {aboutData.team?.length > 0 && (
+        <section className="section" style={{ background: 'var(--surface)' }}>
           <div className="container">
             <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem,4vw,3.5rem)' }}>
-              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{t('Governance', 'ഭരണസമിതി')}</p>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)' }}>{t('Board of Directors', 'ഭരണസമിതി അംഗങ്ങൾ')}</h2>
+              <p style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{t('Our People', 'ഞങ്ങളുടെ ടീം')}</p>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)' }}>{t('Meet Our Team', 'ഞങ്ങളുടെ ടീമിനെ പരിചയപ്പെടുക')}</h2>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem' }}>
-              {aboutData.board.map((m: any, i: number) => (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+              {aboutData.team.map((m: any, i: number) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                  className="bento-card" style={{ padding: '1.5rem', textAlign: 'center' }}>
-                  <div style={{ width: 80, height: 80, borderRadius: 'var(--r-full)', overflow: 'hidden', margin: '0 auto 1rem', border: '3px solid var(--surface-2)' }}>
-                    {m.image ? <img src={m.image} alt={m.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><UserCircle size={40} color="var(--text-faint)" /></div>}
+                  className="bento-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                  <div style={{ width: 100, height: 100, borderRadius: 'var(--r-full)', overflow: 'hidden', margin: '0 auto 1.25rem', border: '4px solid var(--surface-2)', background: 'var(--bg)' }}>
+                    {m.image ? (
+                      <img src={m.image} alt={m.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><UserCircle size={50} color="var(--text-faint)" /></div>
+                    )}
                   </div>
-                  <h4 style={{ fontWeight: 700, fontSize: 'var(--text-sm)', color: 'var(--text)' }}>{m.name}</h4>
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--green)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{m.designation}</p>
+                  <h4 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-lg)', color: 'var(--text)', marginBottom: '0.25rem' }}>{m.name}</h4>
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--green)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: m.number ? '1rem' : '0' }}>{m.post}</p>
+                  
+                  {m.number && (
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', background: 'var(--surface-2)', borderRadius: 'var(--r-full)', color: 'var(--text-muted)', fontSize: 'var(--text-sm)', marginTop: 'auto' }}>
+                      <Phone size={14} color="var(--trust-blue)" />
+                      <a href={`tel:${m.number.replace(/\s/g, '')}`} style={{ color: 'inherit', fontWeight: 600 }}>{m.number}</a>
+                    </div>
+                  )}
                 </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ═══ STAFF ═══ */}
-      {aboutData.staff?.length > 0 && (
-        <section style={{ background: 'var(--surface)' }} className="section">
-          <div className="container">
-            <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem,4vw,3.5rem)' }}>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'var(--text-2xl)', color: 'var(--text)' }}>{t('Our Team', 'ഞങ്ങളുടെ ടീം')}</h2>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
-              {aboutData.staff.map((m: any, i: number) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', background: 'var(--bg)', borderRadius: 'var(--r-md)', border: '1px solid var(--border)' }}>
-                  <div style={{ width: 40, height: 40, borderRadius: 'var(--r-full)', overflow: 'hidden', flexShrink: 0 }}>
-                    {m.image ? <img src={m.image} alt={m.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div style={{ width: '100%', height: '100%', background: 'var(--surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><UserCircle size={20} color="var(--text-faint)" /></div>}
-                  </div>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 'var(--text-sm)', color: 'var(--text)' }}>{m.name}</div>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-faint)' }}>{m.designation}</div>
-                  </div>
-                </div>
               ))}
             </div>
           </div>
